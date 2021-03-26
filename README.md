@@ -1,2 +1,2 @@
-# remoll-job-submission
-Sample job submission scripts for remoll simulation and analysis
+# Scripts for parallel Remoll job submission on HPC clusters 
+Sample job submission scripts for Remoll simulation and analysis
