@@ -29,12 +29,27 @@ Then, set the setgid bit on all directories (for more information, see Group ID)
 It is possible to backup data in the nearline tape storage. Back up your data here if you don't plan to access them for a long time.
 
 	cd /nearline/rrg-jmammei/$USER 
-	dar -c <output_directory_name> -R <directory containing source directory> -g <source_directory_name> -s 100G 
+	dar -c <output_directory_name> -R <full path of directory containing source directory> -g <source_directory_name> -s 100G 
 
 # Running interactive jobs
 
 For commands that take long time to execute,  you can use interactive jobs. Useful when combining large number of ROOT files together using hadd. 
 
+You can start an interactive session on a compute node with salloc. In the following example we request two tasks, which corresponds to two CPU cores, for an hour:
+
+	salloc --time=1:0:0 --ntasks=2 --account=def-someuser
+	salloc: Granted job allocation 1234567
+	...             # do some work
+	exit            # terminate the allocation
+	salloc: Relinquishing job allocation 1234567
+
+It is also possible to run graphical programs interactively on a compute node by adding the --x11 flag to your salloc command. In order for this to work, you must first connect to the cluster with X11 forwarding enabled.
+
+# Checking existing jobs in the slurm queue
+
+Maximum 1000 jobs can be simultaneously run on beluga per user. To see the list of existing jobs in your queue:
+
+	squeue -u $USER
 
 
 
