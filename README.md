@@ -6,5 +6,5 @@ If you are using the compute canada beluga server, checkout the beluga branch af
 
 If you are using the jefferson lab ifarm cluster, checkout the ifarm branch after cloning the repository.
 
-        git checkout ifarm
+	git checkout ifarm
 
