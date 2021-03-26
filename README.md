@@ -1,10 +1,33 @@
 # Scripts for parallel Remoll job submission on HPC clusters 
 
-If you are using the compute canada beluga server, checkout the beluga branch after cloning the repository.
+# Running interactive jobs on ifarm
 
-	git checkout beluga
+From an ifarm machine, it is possible to create a shell on a farm node like so:
 
-If you are using the jefferson lab ifarm cluster, checkout the ifarm branch after cloning the repository.
+	ifarm> salloc -p ifarm
+	salloc: Granted job allocation 5956045
 
-	git checkout ifarm
+	ifarm> srun --pty bash
 
+	bash-4.2$ echo "This is running on host `hostname`"
+	This is running on host farm180301
+
+	bash-4.2$ exit
+	exit
+
+	ifarm> exit
+	exit
+
+	salloc: Relinquishing job allocation 5956045
+ 
+Note that there are two steps: First is getting an allocation on the slurm ifarm partition. The second is attaching to the session on the farm node. Once the job is attached to farm node all computation happens there. The shell session is a conduit for the interaction.
+
+# Submitting parallel Remoll jobs on ifarm
+
+Look at the instrutions in the simulation and analysis folders
+
+# Checking job status
+
+Maximum 1000 jobs can be run simultaneously on ifarm. Check your queue status before submitting more jobs.
+
+	squeue -u $USER
