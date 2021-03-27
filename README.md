@@ -9,7 +9,7 @@ The above environment is the default environment for running simulations.
 
 The ROOT in the above environment doesn't support combining of files over a certain size using hadd. Use the following version for that purpose:
 
-	source /apps/root/6.18.04/setroots_CUE
+	source /apps/root/6.18.04/setroot_CUE
 
 
 
