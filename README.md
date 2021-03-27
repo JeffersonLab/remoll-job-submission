@@ -1,4 +1,18 @@
-# Scripts for parallel Remoll job submission on HPC clusters 
+# Setting up the environment
+
+To set up ROOT/6.20.04 and Geant4/10.6.p02:
+
+	source /site/12gev_phys/softenv.csh 2.4
+	source /site/12gev_phys/2.4/Linux_CentOS7.7.1908-gcc9.2.0/geant4/4.10.06.p02MT/bin/geant4.csh
+
+The above environment is the default environment for running simulations. 
+
+The ROOT in the above environment doesn't support combining of files over a certain size using hadd. Use the following version for that purpose:
+
+	source /apps/root/6.18.04/setroots_CUE
+
+
+
 
 # Running interactive jobs on ifarm
 
@@ -24,7 +38,7 @@ Note that there are two steps: First is getting an allocation on the slurm ifarm
 
 # Submitting parallel Remoll jobs on ifarm
 
-Look at the instrutions in the simulation and analysis folders
+Look at the instructions in the simulation and analysis folders
 
 # Checking job status
 
