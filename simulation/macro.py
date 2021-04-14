@@ -23,7 +23,9 @@ parser.add_argument("--time", dest="time", action= "store", required= False, def
 parser.add_argument("--G4", dest="geant", action= "store", required=False, default="4",  help="choose geant4 version to use. 4 or 6.")
 parser.add_argument("--umap", dest="umap", action = "store", required=False, default="upstreamJLAB_v2", help="provide the map name for upstream magnet. Ex: upstreamJLAB_v2.txt")
 parser.add_argument("--dmap", dest="dmap", action = "store", required=False, default="segmentedJLAB_v2", help="provide the map name for downstream magnet. Ex: segmentedJLAB_v2.txt")
-
+parser.add_argument("--targ", dest="targ", action = "store", required=False, default="USAlTarg", help="provide the target name.")
+parser.add_argument("--pion", dest="pion", action = "store", required=False, default="pi-", help="provide the pion name.")
+parser.add_argument("--interpol", dest="interpol", action="store", required=True, help="provide interpolation.")
 
 args=parser.parse_args()
 
@@ -64,6 +66,8 @@ jsubf.write("echo /run/numberOfThreads 5 >>"+macro+"\n")
 jsubf.write("echo /run/initialize >>"+macro+"\n")
 jsubf.write("echo /remoll/addfield map_directory/"+args.dmap+" >>"+macro+"\n")
 jsubf.write("echo /remoll/addfield map_directory/"+args.umap+" >>"+macro+"\n")	
+jsubf.write("echo /remoll/field/interpolation map_directory/"+args.dmap+" "+args.interpol+" >>"+macro+"\n")
+jsubf.write("echo /remoll/field/interpolation map_directory/"+args.umap+" "+args.interpol+" >>"+macro+"\n")
 jsubf.write("echo /remoll/evgen/set "+args.gen+" >>"+macro+"\n")
 if args.gen=="beam":
     jsubf.write("echo /remoll/evgen/beam/origin 0 0 -7.5 m >>"+macro+"\n")
@@ -74,6 +78,13 @@ if args.gen=="beam":
     jsubf.write("echo /remoll/evgen/beam/rasrefz -4.5 m >>"+macro+"\n")
 else:
     jsubf.write("echo /remoll/oldras false >>"+macro+"\n")
+
+if (args.gen=="inelasticAl" or args.gen=="elasticAl" or args.gen=="quasielasticAl"):
+    jsubf.write("echo /remoll/targname "+args.targ+"  >>"+macro+"\n")
+
+if (args.gen=="pion"):
+    jsubf.write("echo /remoll/evgen/pion/settype "+args.pion+" >>"+macro+"\n")
+
 jsubf.write("echo /remoll/beamene 11 GeV >>"+macro+"\n")
 jsubf.write("echo /remoll/beamcurr 85 microampere >>"+macro+"\n")
 jsubf.write("echo /remoll/SD/disable_all >>"+macro+"\n")
