@@ -51,6 +51,8 @@ Maximum 1000 jobs can be simultaneously run on beluga per user. To see the list 
 
 	squeue -u $USER
 
+# Submitting parallel Remoll jobs
 
+Follow the instructions in the readme files inside the simulation and analysis folders. 
 
 
