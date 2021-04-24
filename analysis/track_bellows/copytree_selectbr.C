@@ -2,7 +2,7 @@ using namespace ROOT;
 
 Int_t isValid(std::vector<remollGenericDetectorHit_t> *);
 
-int copytree_selectbr(TString source, TString out){
+int copytree_selectbr_V2(TString source, TString out){
 
 TChain T("T");
 T.Add(Form("%s", source.Data())); 
@@ -22,6 +22,7 @@ std::vector<remollGenericDetectorHit_t>  *fHit=0;
 T.SetBranchAddress("ev", &fEvent);
 T.SetBranchAddress("hit", &fHit);
 
+std::map<Int_t, Int_t> unique;
 
 for (size_t j=0;j< nEvents;j++){
 	T.GetEntry(j);
@@ -29,13 +30,24 @@ for (size_t j=0;j< nEvents;j++){
         // identify events for which track id 1 hits one of the bellows
         if(isValid(fHit)){   
               oevent = fEvent;
+              unique[5547]=0;
+	      unique[28]=0;
+	      unique[70]=0;
+	      unique[71]=0;
+	      unique[72]=0;
+	      unique[73]=0;
+	      unique[74]=0;
+	      unique[75]=0;
+	      unique[76]=0;
 
               for(size_t i=0;i<fHit->size();i++){
                    remollGenericDetectorHit_t hit=fHit->at(i);
-                   // only record the hits with track id 1
-                   if(hit.trid==1){  
+                     
+                   // only record the hits with track id 1. Record the first hit on each detector as the hit for each primary track is already time ordered. 
+                   if(hit.trid!=1 || unique[hit.det]!=0 ) continue;  
+                         unique[hit.det]++;
                          ohit->push_back(hit);
-                   }
+                  
               }
 
               tree->Fill();              
