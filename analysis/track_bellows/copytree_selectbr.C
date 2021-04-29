@@ -2,7 +2,7 @@ using namespace ROOT;
 
 Int_t isValid(std::vector<remollGenericDetectorHit_t> *);
 
-int copytree_selectbr_V2(TString source, TString out){
+int copytree_selectbr(TString source, TString out){
 
 TChain T("T");
 T.Add(Form("%s", source.Data())); 
@@ -39,6 +39,8 @@ for (size_t j=0;j< nEvents;j++){
 	      unique[74]=0;
 	      unique[75]=0;
 	      unique[76]=0;
+              unique[30]=0;
+              unique[40]=0;
 
               for(size_t i=0;i<fHit->size();i++){
                    remollGenericDetectorHit_t hit=fHit->at(i);
