@@ -1,7 +1,12 @@
- cd /w/work/halla/moller12gev/<username>
- mkdir <study_dir>
-• cd <study_dir>
-• mkdir <job_dir>
+ # Instructions
+ ```
+  cd /w/work/halla/moller12gev/<username>
+ 
+  mkdir <study_dir>
+ 
+  cd <study_dir>
+ 
+  mkdir <job_dir>
 • cd <job_dir>
 • cp /volatile/halla/moller12gev/rahmans/REMOLL_TEST/*.py .
 • git checkout jlab
@@ -21,3 +26,4 @@
 name>/jsub -t /volatile/halla/moller12gev/<username>/<jobname>/tmp -o
 /volatile/halla/moller12gev/<username>/<job name>/scratch -g <generator>
 -d 28 --bhd 28 -r 1-10 -n 1000000 --time 06:00:00
+'''
