@@ -40,7 +40,8 @@ if not os.path.exists(args.out_dir):
         os.system("mkdir -p "+args.out_dir)
 if not os.path.exists(args.work_dir):
         os.system("mkdir -p "+args.work_dir)
-
+args.tmp_dir=os.path.realpath(args.tmp_dir)
+args.jsub_dir=os.path.realpath(args.jsub_dir)
 out=os.path.realpath(args.out_dir)
 		
 jsubf=open(args.jsub_dir+"/"+args.gen+".sh", "w")
@@ -57,9 +58,9 @@ jsubf.write("#SBATCH --output="+args.tmp_dir+"/"+args.gen+"_%A_%a.out\n")
 jsubf.write("#SBATCH --chdir="+args.work_dir+"\n")
 jsubf.write("mkdir ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
 jsubf.write("cd ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
-macro=args.work_dir+"/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.mac"
+macro=args.work_dir+"/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+".mac"
 jsubf.write("touch "+macro+"\n")
-jsubf.write("echo /remoll/setgeofile geometry/mollerMother_merged.gdml >>"+macro+"\n")
+jsubf.write("echo /remoll/setgeofile geometry/mollerMother.gdml >>"+macro+"\n")
 jsubf.write("echo /remoll/physlist/register QGSP_BERT_HP >>"+macro+"\n")
 jsubf.write("echo /remoll/physlist/parallel/enable >>"+macro+"\n") 
 jsubf.write("echo /remoll/parallel/setfile geometry/mollerParallel.gdml >>"+macro+"\n")
@@ -93,11 +94,7 @@ for det in args.det_list:
     jsubf.write("echo /remoll/SD/detect secondaries "+str(det)+" >>"+macro+"\n")
     if (det in args.bhd_list):
        jsubf.write("echo /remoll/SD/detect boundaryhits "+str(det)+" >>"+macro+"\n")
-jsubf.write("echo /remoll/kryptonite/volume logicUSTracker >>"+macro+"\n")
-jsubf.write("echo /remoll/kryptonite/volume logicDSTracker >>"+macro+"\n")
-jsubf.write("echo /remoll/kryptonite/volume logicWasher_12 >>"+macro+"\n")
 jsubf.write("echo /remoll/kryptonite/volume lefthut_Det_inside_logic >>"+macro+"\n")
-jsubf.write("echo /remoll/kryptonite/volume righthut_Det_inside_logic >>"+macro+"\n")
 jsubf.write("echo /remoll/kryptonite/enable >>"+macro+"\n")
 jsubf.write("echo /remoll/filename "+out+"/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.root >>"+macro+"\n")
 jsubf.write("echo /run/beamOn "+str(args.n_events)+" >>"+macro+"\n")  
@@ -105,7 +102,7 @@ jsubf.write("cat "+macro+"\n")
 jsubf.write("cp -r "+args.src+"/"+args.version+" .\n")
 jsubf.write("cd "+args.version+" \n")
 jsubf.write("echo \"Current working directory is `pwd`\"\n")
-jsubf.write("./build/remoll "+macro+"\n")
+jsubf.write("./build/remoll ../"+args.gen+".mac\n")
 jsubf.write("echo \"Program remoll finished with exit code $? at: `date`\"\n")
 jsubf.write("rm -rf "+args.work_dir+"/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}")
 
