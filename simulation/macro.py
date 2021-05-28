@@ -37,7 +37,8 @@ if not os.path.exists(args.tmp_dir):
         os.system("mkdir -p "+args.tmp_dir)
 if not os.path.exists(args.out_dir):
         os.system("mkdir -p "+args.out_dir)
-
+args.tmp_dir=os.path.realpath(args.tmp_dir)
+args.jsub_dir=os.path.realpath(args.jsub_dir)
 out=os.path.realpath(args.out_dir)
 		
 jsubf=open(args.jsub_dir+"/"+args.gen+".sh", "w")
