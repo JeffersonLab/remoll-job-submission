@@ -21,7 +21,7 @@ parser.add_argument("-w", dest="work_dir", action="store", required=True, help="
 
 
 args=parser.parse_args()
-
+args.home=os.path.realpath(args.home)
 args.work_dir=os.path.realpath(args.work_dir)
 args.src_dir= os.path.realpath(args.src_dir)
 jsub=os.path.realpath(args.jsub_dir)
