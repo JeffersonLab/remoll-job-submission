@@ -1,3 +1,23 @@
+std::vector<Double_t> integral(TH1D* h, Double_t xmin, Double_t xmax){
+std::vector<Double_t> sum;
+
+
+TAxis *axis = h->GetXaxis();
+Int_t bmin = axis->FindBin(xmin); //in your case xmin=-1.5
+Int_t bmax = axis->FindBin(xmax); //in your case xmax=0.8
+
+Double_t error= 0;
+Double_t integral = h->IntegralAndError(bmin,bmax, error); // This is a slight over estimate of the error. But to our precision it shouldn't be noticeable.
+integral -= h->GetBinContent(bmin)*(xmin-axis->GetBinLowEdge(bmin))/axis->GetBinWidth(bmin);
+integral -= h->GetBinContent(bmax)*(axis->GetBinUpEdge(bmax)-xmax)/axis->GetBinWidth(bmax);
+
+sum.push_back(65*7*integral);
+sum.push_back(65*7*error);
+
+
+return sum;
+}
+
 int draw1D(TString input, TString sector){
 std::map<TString,TFile*> f;
 std::map<TString,TH1D*> h;
@@ -43,11 +63,15 @@ for (Int_t i=0;i<g.size();i++){
         h[g[i]]->SetLineWidth(2);
         legend->AddEntry(h[g[i]], g[i]);
         hs.Add(h[g[i]]);
+        
 
 }
 
-std::cout<< h["moller"]->Integral()*65*7 << std::endl;
-
+// Example of calculating integral over the whole radial range of analyzed histogram. In this case, the analyzed histogram spread was taken to be 600-1300 mm on main detector instead of just 900-1060 mm 
+std::cout<< h["moller"]->Integral()*65*7 << "GHz"<< std::endl;
+//Example of calculating integral over a subrange. For example ring 5.
+std::vector<Double_t> ring5_integral=integral(h["moller"], 900, 1060);
+std::cout<< ring5_integral[0] << "+/-" << ring5_integral[1] << "GHz" << std::endl;
 
 hs.Draw("HISTnostack");
 hs.GetXaxis()->SetRangeUser(500,1300);
