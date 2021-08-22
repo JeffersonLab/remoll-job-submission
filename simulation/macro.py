@@ -25,6 +25,7 @@ parser.add_argument("--dmap", dest="dmap", action = "store", required=False, def
 parser.add_argument("--targ", dest="targ", action = "store", required=False, default="USAlTarg", help="provide the target name.")
 parser.add_argument("--pion", dest="pion", action = "store", required=False, default="pi-", help="provide the pion name.")
 parser.add_argument("-w", dest="work_dir", action="store", required=True, help="Enter location where analysis takes place. Choose a location in volatile. Ex: /volatile/halla/moller12gev/rahmans/work_dir.")
+parser.add_argument("--voff", dest="voff", action="store", required=True, default="0.0",help="provide offset value. Options: -2 to 2 for xoffsets, -1 to 1 for angle offsets")
 
 
 args=parser.parse_args()
@@ -56,9 +57,10 @@ jsubf.write("#SBATCH --cpus-per-task=5\n")
 jsubf.write("#SBATCH --mem=10G\n")
 jsubf.write("#SBATCH --output="+args.tmp_dir+"/"+args.gen+"_%A_%a.out\n")
 jsubf.write("#SBATCH --chdir="+args.work_dir+"\n")
+jsubf.write("cd ${SLURM_JOB_ID}\n")
 jsubf.write("mkdir ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
 jsubf.write("cd ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
-macro=args.work_dir+"/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+".mac"
+macro=args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+".mac"
 jsubf.write("touch "+macro+"\n")
 jsubf.write("echo /remoll/setgeofile geometry/mollerMother.gdml >>"+macro+"\n")
 jsubf.write("echo /remoll/physlist/register QGSP_BERT_HP >>"+macro+"\n")
@@ -78,6 +80,9 @@ if args.gen=="beam":
     jsubf.write("echo /remoll/evgen/beam/rasrefz -4.5 m >>"+macro+"\n")
 else:
     jsubf.write("echo /remoll/oldras false >>"+macro+"\n")
+    jsubf.write("echo /remoll/geometry/absolute_position targetLadder \("+args.voff+",0,0\) >>"+macro+"\n")
+    jsubf.write("echo /remoll/beam_x0 "+args.voff+" mm>> "+macro+"\n")
+
 
 if (args.gen=="inelasticAl" or args.gen=="elasticAl" or args.gen=="quasielasticAl"):
     jsubf.write("echo /remoll/targname "+args.targ+"  >>"+macro+"\n")
@@ -96,15 +101,17 @@ for det in args.det_list:
        jsubf.write("echo /remoll/SD/detect boundaryhits "+str(det)+" >>"+macro+"\n")
 jsubf.write("echo /remoll/kryptonite/volume lefthut_Det_inside_logic >>"+macro+"\n")
 jsubf.write("echo /remoll/kryptonite/enable >>"+macro+"\n")
-jsubf.write("echo /remoll/filename "+out+"/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.root >>"+macro+"\n")
+jsubf.write("echo /remoll/filename "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.root >>"+macro+"\n")
 jsubf.write("echo /run/beamOn "+str(args.n_events)+" >>"+macro+"\n")  
 jsubf.write("cat "+macro+"\n")
 jsubf.write("cp -r "+args.src+"/"+args.version+" .\n")
 jsubf.write("cd "+args.version+" \n")
 jsubf.write("echo \"Current working directory is `pwd`\"\n")
+jsubf.write("sed -i 's%name=\"XOFFSET\" value=\"0.0\"%name=\"XOFFSET\" value=\""+args.voff+"\"%g' geometry/upstream/upstreamTorusRegion.gdml\n")
 jsubf.write("./build/remoll ../"+args.gen+".mac\n")
 jsubf.write("echo \"Program remoll finished with exit code $? at: `date`\"\n")
-jsubf.write("rm -rf "+args.work_dir+"/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}")
+jsubf.write("cp "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.root >>"+macro+" "+out+"\n")
+jsubf.write("rm -rf "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}")
 
 jsubf.close()
 	        
