@@ -56,16 +56,19 @@ jsubf.write("#SBATCH --mem=10G\n")
 jsubf.write("#SBATCH --output="+tmp+"/"+args.gen+"_%A_%a.out\n")
 jsubf.write("#SBATCH --error="+tmp+"/"+args.gen+"_%A_%a.err\n")
 jsubf.write("#SBATCH --chdir="+args.work_dir+"\n")
+jsubf.write("cd ${SLURM_JOB_ID}\n")
+jsubf.write("mkdir ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
+jsubf.write("cd ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
+
 jsubf.write("source /site/12gev_phys/softenv.csh 2.4 \n")
 for i in range(0, len(list_dir)):
      index= str(list_dir[i]).rfind(".root")
      jsubf.write("FILE["+str(i)+"]=\""+str(list_dir[i][0:index])+"\"\n")
-jsubf.write("mkdir ${FILE[${SLURM_ARRAY_TASK_ID}-1]}\n")
-jsubf.write("cd ${FILE[${SLURM_ARRAY_TASK_ID}-1]}\n")
+
 jsubf.write("echo \"Current working directory is `pwd`\"\n")
-jsubf.write("cp "+args.home+"/* "+args.work_dir+"/${FILE[${SLURM_ARRAY_TASK_ID}-1]}\n")
-jsubf.write("cp "+args.home+"/../reroot "+args.work_dir+"/${FILE[${SLURM_ARRAY_TASK_ID}-1]}\n")
-jsubf.write("cp "+args.src_dir+"/${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root "+args.work_dir+"/${FILE[${SLURM_ARRAY_TASK_ID}-1]}\n")
+jsubf.write("cp "+args.home+"/* "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
+jsubf.write("cp "+args.home+"/../reroot "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
+jsubf.write("cp "+args.src_dir+"/${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
 jsubf.write("echo \"Current working directory is `pwd`\"\n")
 #jsubf.write("./reroot -q -b radAna.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}\\\",1,1,1)\"\n")
 #jsubf.write("./reroot -q -b radAna.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}\\\",2,0,1)\"\n")
@@ -102,7 +105,7 @@ else:
 
 
 jsubf.write("cd "+args.work_dir+"\n")
-jsubf.write("rm -rf ${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\n")
+jsubf.write("rm -rf ${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
 
 jsubf.write("echo \"Program remoll finished with exit code $? at: `date`\"\n")
 jsubf.close()
