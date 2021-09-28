@@ -26,7 +26,7 @@ parser.add_argument("--targ", dest="targ", action = "store", required=False, def
 parser.add_argument("--pion", dest="pion", action = "store", required=False, default="pi-", help="provide the pion name.")
 parser.add_argument("-w", dest="work_dir", action="store", required=True, help="Enter location where analysis takes place. Choose a location in volatile. Ex: /volatile/halla/moller12gev/rahmans/work_dir.")
 parser.add_argument("--voff", dest="voff", action="store", required=True, default="0.0",help="provide offset value. Options: -2 to 2 for xoffsets, -1 to 1 for angle offsets")
-
+parser.add_argument("--scale", dest="scale", action="store", required=True, default="1.0",help="provide magnetic field scale factor.")
 
 args=parser.parse_args()
 
@@ -70,6 +70,8 @@ jsubf.write("echo /run/numberOfThreads 5 >>"+macro+"\n")
 jsubf.write("echo /run/initialize >>"+macro+"\n")
 jsubf.write("echo /remoll/addfield map_directory/"+args.dmap+" >>"+macro+"\n")
 jsubf.write("echo /remoll/addfield map_directory/"+args.umap+" >>"+macro+"\n")	
+jsubf.write("echo /remoll/field/scale map_directory/"+args.dmap+" "+args.scale+">>"+macro+"\n")
+jsubf.write("echo /remoll/field/scale map_directory/"+args.umap+" "+args.scale+">>"+macro+"\n")
 jsubf.write("echo /remoll/evgen/set "+args.gen+" >>"+macro+"\n")
 if args.gen=="beam":
     jsubf.write("echo /remoll/evgen/beam/origin 0 0 -7.5 m >>"+macro+"\n")
