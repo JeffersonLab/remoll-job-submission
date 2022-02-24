@@ -8,7 +8,7 @@ import time
 import argparse
 
 parser = argparse.ArgumentParser(description="Submit array jobs to ifarm.")
-parser.add_argument("-a", dest="account", action="store", required=True, help="Enter the Compute Canada account. You can use the allocated account rrg-jmammei or the default account def-<supervisor username>. For test simulations, preferably use the def account or short stat with rrg.")  
+parser.add_argument("-a", dest="account", action="store", required=True, help="Enter the Jefferson Lab account. Example: halla")  
 parser.add_argument("-s", dest="src", action="store", required=False, default="~/projects/rrg-jmammei/REMOLL/remoll_version", help="source folder where simulation directory exists")
 parser.add_argument("-v", dest="version", action="store", required=False, default="real_shield", help= "choose the version of simulation to use. current options are develop, kryp_shield, real_shield and real_shield_v1 [most optimized real shielding]. ")
 parser.add_argument("-j", dest="jsub_dir", action="store", required=True, help="choose directory to write the slurm submission scripts")
