@@ -17,7 +17,7 @@ parser.add_argument("-o", dest="out_dir", action="store", required=True, help="c
 parser.add_argument("-g", dest="gen", action= "store", required=False, default="moller",  help="choose generator to use. Options are moller, elastic, inelastic, beam, etc.")
 parser.add_argument("--time", dest="time", action= "store", required= False, default= "00:20:00", help= "provide the estimated run time. Ex: \"00:25:00\". Usually it is 10 minutes for 1000 moller events.")
 parser.add_argument("-r", dest="run_range", action = "store", required=False, default="1", help="provide run range. Example: \"2-5\"")
-parser.add_argument("-w", dest="work_dir", action="store", required=True, help="Enter location where analysis takes place. Choose a location in volatile. Ex: /volatile/halla/moller12gev/rahmans/work_dir.")
+parser.add_argument("-w", dest="work_dir", action="store", required=False, default="/scratch/slurm", help="Enter location where analysis takes place. Choose: /scratch/slurm")
 
 
 args=parser.parse_args()
