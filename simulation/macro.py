@@ -10,7 +10,7 @@ import argparse
 parser = argparse.ArgumentParser(description="Submit array jobs to ifarm.")
 parser.add_argument("-a", dest="account", action="store", required=True, help="Enter the Jefferson Lab account. Example: halla")  
 parser.add_argument("-s", dest="src", action="store", required=False, default="~/projects/rrg-jmammei/REMOLL/remoll_version", help="source folder where simulation directory exists")
-parser.add_argument("-v", dest="version", action="store", required=False, default="real_shield", help= "choose the version of simulation to use. current options are develop, kryp_shield, real_shield and real_shield_v1 [most optimized real shielding]. ")
+parser.add_argument("-v", dest="version", action="store", required=False, default="real_shield", help= "choose the version of simulation to use.")
 parser.add_argument("-j", dest="jsub_dir", action="store", required=True, help="choose directory to write the slurm submission scripts")
 parser.add_argument("-t", dest="tmp_dir", action="store", required=True, help="choose directory to write the slurm output logs")
 parser.add_argument("-o", dest="out_dir", action="store", required=True, help="choose where to write the output root files")
@@ -24,7 +24,7 @@ parser.add_argument("--umap", dest="umap", action = "store", required=False, def
 parser.add_argument("--dmap", dest="dmap", action = "store", required=False, default="V2DSg.9.75cm.parallel.txt", help="provide the map name for downstream magnet. Ex: V2DSg.9.75cm.parallel.txt")
 parser.add_argument("--targ", dest="targ", action = "store", required=False, default="USAlTarg", help="provide the target name.")
 parser.add_argument("--pion", dest="pion", action = "store", required=False, default="pi-", help="provide the pion name.")
-parser.add_argument("-w", dest="work_dir", action="store", required=True, help="Enter location where analysis takes place. Choose a location in volatile. Ex: /volatile/halla/moller12gev/rahmans/work_dir.")
+parser.add_argument("-w", dest="work_dir", action="store", required=False, default="/scratch/slurm", help="Enter location where analysis takes place. Choose: /scratch/slurm.")
 parser.add_argument("--voff", dest="voff", action="store", required=True, default="0.0",help="provide offset value. Options: -2 to 2 for xoffsets, -1 to 1 for angle offsets")
 parser.add_argument("--scale", dest="scale", action="store", required=True, default="1.0",help="provide magnetic field scale factor.")
 
