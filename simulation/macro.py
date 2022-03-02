@@ -9,12 +9,12 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Submit array jobs to ifarm.")
 parser.add_argument("-a", dest="account", action="store", required=True, help="Enter the Jefferson Lab account. Example: halla")  
-parser.add_argument("-s", dest="src", action="store", required=False, default="~/projects/rrg-jmammei/REMOLL/remoll_version", help="source folder where simulation directory exists")
-parser.add_argument("-v", dest="version", action="store", required=False, default="real_shield", help= "choose the version of simulation to use.")
+parser.add_argument("-s", dest="src", action="store", required=True, help="source folder where simulation directory exists")
+parser.add_argument("-v", dest="version", action="store", required=True, help= "choose the version of simulation to use.")
 parser.add_argument("-j", dest="jsub_dir", action="store", required=True, help="choose directory to write the slurm submission scripts")
-parser.add_argument("-t", dest="tmp_dir", action="store", required=True, help="choose directory to write the slurm output logs")
+parser.add_argument("-t", dest="tmp_dir", action="store", required=False, default="/farm_out/spayde", help="choose directory to write the slurm output logs")
 parser.add_argument("-o", dest="out_dir", action="store", required=True, help="choose where to write the output root files")
-parser.add_argument("-g", dest="gen", action= "store", required=False, default="moller",  help="choose generator to use. Options are moller, elastic, inelastic, beam, etc.")
+parser.add_argument("-g", dest="gen", action= "store", required=False, default="beam",  help="choose generator to use. Options are moller, elastic, inelastic, beam, etc.")
 parser.add_argument("-d", dest="det_list", action= "store", required=False, nargs='+', default=[28], help="provide list of sensitive detectors separated by space. Example: 28 29. By default, all detectors detect low energy neutrals and secondaries. ")
 parser.add_argument("--bhd", dest="bhd_list", action= "store", required=False,nargs='+', default=[28], help="provide list of boundary hit detectors. By default only detector 28 is boundary hit detector")
 parser.add_argument("-r", dest="run_range", action = "store", required=False, default="1", help="provide run range. Example: \"2-5\"")
@@ -25,8 +25,8 @@ parser.add_argument("--dmap", dest="dmap", action = "store", required=False, def
 parser.add_argument("--targ", dest="targ", action = "store", required=False, default="USAlTarg", help="provide the target name.")
 parser.add_argument("--pion", dest="pion", action = "store", required=False, default="pi-", help="provide the pion name.")
 parser.add_argument("-w", dest="work_dir", action="store", required=False, default="/scratch/slurm", help="Enter location where analysis takes place. Choose: /scratch/slurm.")
-parser.add_argument("--voff", dest="voff", action="store", required=True, default="0.0",help="provide offset value. Options: -2 to 2 for xoffsets, -1 to 1 for angle offsets")
-parser.add_argument("--scale", dest="scale", action="store", required=True, default="1.0",help="provide magnetic field scale factor.")
+parser.add_argument("--voff", dest="voff", action="store", required=False, default="0.0",help="provide offset value. Options: -2 to 2 for xoffsets, -1 to 1 for angle offsets")
+parser.add_argument("--scale", dest="scale", action="store", required=False, default="1.0",help="provide magnetic field scale factor.")
 
 args=parser.parse_args()
 
