@@ -119,7 +119,8 @@ jsubf.write("rm -rf "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SL
 jsubf.close()
 	        
                 
-subprocess.call("sbatch --array="+args.run_range+" "+args.jsub_dir+"/"+args.gen+".sh",shell=True)
+# subprocess.call("sbatch --array="+args.run_range+" "+args.jsub_dir+"/"+args.gen+".sh",shell=True)
+print("sbatch --array="+args.run_range+" "+args.jsub_dir+"/"+args.gen+".sh")
 		
 		
 
