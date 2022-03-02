@@ -113,8 +113,9 @@ jsubf.write("echo \"Current working directory is `pwd`\"\n")
 jsubf.write("sed -i 's%name=\"XOFFSET\" value=\"0.0\"%name=\"XOFFSET\" value=\""+args.voff+"\"%g' geometry/upstream/upstreamTorusRegion.gdml\n")
 jsubf.write("./build/remoll ../"+args.gen+".mac\n")
 jsubf.write("echo \"Program remoll finished with exit code $? at: `date`\"\n")
-jsubf.write("cp "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.root >>"+macro+" "+out+"\n")
-jsubf.write("rm -rf "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}")
+jsubf.write("cp "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.root "+macro+" "+out+"\n")
+# jsubf.write("rm -rf "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}")
+jsubf.write("rm -rf "+args.work_dir+"/${SLURM_JOB_ID}")
 
 jsubf.close()
 	        
