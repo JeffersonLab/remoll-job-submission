@@ -136,6 +136,17 @@ for (size_t j=0; j< nEvents; j++){
 }
 
 
+for (Int_t j=0; j<sector.size(); j++){
+ for(Int_t k=0; k<photon_ene.size(); k++){
+  part= Form("pr_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data());
+  h_vz[part]->SetDirectory(subdir);
+  h_xy[part]->SetDirectory(subdir);
+  h_r[part]->SetDirectory(subdir);
+  h_ph[part]->SetDirectory(subdir);
+ }
+}
+f->Write();
+
 return 0;
 }
 
@@ -177,10 +188,3 @@ Int_t findSector(Float_t x, Float_t y){
   
   return sec;
 }
-  
-
-
-
-
-
-
