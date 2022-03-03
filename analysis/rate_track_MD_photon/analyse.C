@@ -25,6 +25,7 @@ sector.push_back("trans");
 sector.push_back("open");
 
 std::vector<TString> photon_ene;
+photon_ene.push_back("all");
 photon_ene.push_back("ypless1MeV");
 photon_ene.push_back("yp1to10MeV");
 photon_ene.push_back("ypgreater10MeV");
@@ -64,6 +65,35 @@ for (size_t j=0; j< nEvents; j++){
         remollGenericDetectorHit_t hit=fHit->at(i);
         Int_t sec=findSector(hit.x, hit.y);
         Double_t rate=0;
+     
+         std::map<TString, Bool_t> sector_cut{ {"all", 1},  \
+                                              {"open", sec==3}, \
+                                              {"trans", sec==2}, \
+                                              {"closed", sec==1} };
+
+        std::map<TString,Bool_t> photon_ene_cut{ {"all", selectedEvent["all"].find(hit.trid) != selectedEvent.end()}, \
+                                                 {"ypless1MeV", selectedEvent["ypless1MeV"].find(hit.trid) != selectedEvent.end()}, \
+                                                 {"yp1to10MeV", selectedEvent["y1to10MeV"].find(hit.trid) != selectedEvent.end()}, \
+                                                 {"ypgreater10MeV", selectedEvent["ypgreater10MeV"].find(hit.trid) != selectedEvent.end()} };
+
+        std::map<TString,Bool_t> detector_cut{ {"MD", hit.det==28}, \
+                                               {"Col2Ent", hit.det==38}, \
+                                               {"Col2Exit", hit.det==39}, \
+                                               {"USCoil1", hit.det==40}, \
+                                               {"USCoil2", hit.det==41}, \
+                                               {"USCoil3", hit.det==43}, \
+                                               {"USCoil4", hit.det==144}, \
+                                               {"Col4Ent", hit.det==44}, \
+                                               {"Col4Exit", hit.det==45}, \
+                                               {"PbWallEnt", hit.det==46}, \
+                                               {"PbWallExit", hit.det==47}, \
+                                               {"PhotonBlockerEnt", hit.det==48}, \
+                                               {"PhotonBlockerExit", hit.det==49}, \
+                                               {"DSCoil2", hit.det==50}, \
+                                               {"DSCoil3", hit.det==51}, \
+                                               {"DSCoil6", hit.det==54}, \
+                                               {"DSCoil10", hit.det==78} };
+
 
     }
 }
