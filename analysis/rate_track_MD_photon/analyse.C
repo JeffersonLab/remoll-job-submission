@@ -93,6 +93,27 @@ for (size_t j=0; j< nEvents; j++){
                                                {"DSCoil3", hit.det==51}, \
                                                {"DSCoil6", hit.det==54}, \
                                                {"DSCoil10", hit.det==78} };
+     
+        std::map<TString,Bool_t> pid_cut;
+
+        if (gen=="moller"){
+              pid_cut["primary_electron"]= hit.pid==11 && hit.trid<=2;
+              pid_cut["secondary_electron"]= hit.pid==11 && hit.trid>2;
+              rate = fRate*1.602*1e-13;
+        } else if (gen=="elastic"){
+              pid_cut["primary_electron"]= hit.pid==11 && hit.trid<=1;
+              pid_cut["secondary_electron"]= hit.pid==11 && hit.trid>1;
+              rate = fRate*1.602*1e-13;
+        } else if (gen=="beam"){
+              pid_cut["primary_electron"]= hit.pid==11 && hit.vz<=-3875;
+              pid_cut["secondary_electron"]= hit.pid==11 && hit.vz>-3875;
+              rate = 85*1.0/nEvents;
+        }
+        pid_cut["positron"]  = hit.pid==-11;
+        pid_cut["photon"]    = hit.pid==22;
+        pid_cut["neutron"]   = hit.pid==2112;
+        pid_cut["all"]       = 1;
+ 
 
 
     }
