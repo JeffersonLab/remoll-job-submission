@@ -9,8 +9,7 @@
  git checkout develop
  mkdir build
  cd build
- source /site/12gev_phys/softenv.csh 2.4
- source /site/12gev_phys/2.4/Linux_CentOS7.7.1908-gcc9.2.0/geant4/4.10.06.p02MT/bin/geant4.csh
+ source /lustre03/project/rrg-jmammei/REMOLL/environment/cedar_env_2.0.sh
  cmake -DCMAKE_BUILD_TYPE=Release ../
  make -j 4
  cp libremoll.so ../
