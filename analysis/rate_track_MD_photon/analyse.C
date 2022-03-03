@@ -113,9 +113,25 @@ for (size_t j=0; j< nEvents; j++){
         pid_cut["photon"]    = hit.pid==22;
         pid_cut["neutron"]   = hit.pid==2112;
         pid_cut["all"]       = 1;
- 
+     
+     
+        for (Int_t j=0; j<sector.size(); j++){
+         for(Int_t k=0; k<photon_ene.size(); k++){
+          part= Form("pr_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data());
+          Bool_t selectedHit =  detector_cut[detector] && \
+                                sector_cut[sector[j]]  && \
+                                pid_cut[pid] && \
+                                photon_ene_cut[photon_ene[k]];
+          if (selectedHit){
+           h_vz[part]->Fill(hit.vz, rate*weight);
+           h_xy[part]->Fill(hit.x, hit.y, rate*weight);
+           h_r[part]->Fill(hit.r, rate*weight);
+           h_ph[part]->Fill(hit.ph, rate*weight);
+          }
 
-
+         }
+        }
+          
     }
 }
 
