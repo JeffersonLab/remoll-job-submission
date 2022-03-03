@@ -12,6 +12,10 @@ Note that geant4 visualisation does not work on beluga with this environment. Th
 
 Work by creating subdirectories under the ~/projects/rrg-jmammei folder. Make sure that the group ownership of the folder is set to rrg-jmammei. 
 
+To ensure that all files you create are getting the right ownership, you can use the command:
+
+	newgrp rrg-jmammei
+
 If you already have data in your /project directory with the wrong group ownership, you can use the find to display those files:
 
 	lfs find ~/projects/*/ -group $USER
