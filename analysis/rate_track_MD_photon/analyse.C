@@ -71,10 +71,10 @@ for (size_t j=0; j< nEvents; j++){
                                               {"trans", sec==2}, \
                                               {"closed", sec==1} };
 
-        std::map<TString,Bool_t> photon_ene_cut{ {"all", selectedEvent["all"].find(hit.trid) != selectedEvent.end()}, \
-                                                 {"ypless1MeV", selectedEvent["ypless1MeV"].find(hit.trid) != selectedEvent.end()}, \
-                                                 {"yp1to10MeV", selectedEvent["y1to10MeV"].find(hit.trid) != selectedEvent.end()}, \
-                                                 {"ypgreater10MeV", selectedEvent["ypgreater10MeV"].find(hit.trid) != selectedEvent.end()} };
+        std::map<TString,Bool_t> photon_ene_cut{ {"all", selectedEvent["all"].find(hit.trid) != selectedEvent["all"].end()}, \
+                                                 {"ypless1MeV", selectedEvent["ypless1MeV"].find(hit.trid) != selectedEvent["ypless1MeV"].end()}, \
+                                                 {"yp1to10MeV", selectedEvent["y1to10MeV"].find(hit.trid) != selectedEvent["y1to10MeV"].end()}, \
+                                                 {"ypgreater10MeV", selectedEvent["ypgreater10MeV"].find(hit.trid) != selectedEvent["ypgreater10MeV"].end()} };
 
         std::map<TString,Bool_t> detector_cut{ {"MD", hit.det==28}, \
                                                {"Col2Ent", hit.det==38}, \
