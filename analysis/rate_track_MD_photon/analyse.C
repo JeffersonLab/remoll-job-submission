@@ -58,7 +58,7 @@ T.SetBranchAddress("part", &fPart);
 for (size_t j=0; j< nEvents; j++){
     T.GetEntry(j);
     std::map<TString,std::set<Int_t>> selectedEvent = isValid(fHit);
-    if (selectedEvent.empty()) { continue; }
+    if (selectedEvent["all"].empty()) { continue; }
 
     for (size_t i=0;i<fHit->size();i++){
         remollGenericDetectorHit_t hit=fHit->at(i);
@@ -81,12 +81,13 @@ std::map<TString, std::set<Int_t>> isValid(std::vector<remollGenericDetectorHit_
   remollGenericDetectorHit_t hit=fHit->at(i);
   if (!(hit.det==28 && hit.pid==22 && hit.r>900 && hit.r<=1060)) continue;
 
+  found["all"].insert(hit.trid);
   if(hit.p<=1){
-      found["ypless1MeV"].insert(1);
+      found["ypless1MeV"].insert(hit.trid);
   }else if (hit.p>1 && hit.p<=10){
-      found["yp1to10MeV"].insert(2);
+      found["yp1to10MeV"].insert(hit.trid);
   }else{
-      found["ypgreater10MeV"].insert(3);
+      found["ypgreater10MeV"].insert(hit.trid);
   }
  }
 
