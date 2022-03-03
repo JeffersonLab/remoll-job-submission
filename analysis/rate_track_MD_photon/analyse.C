@@ -57,7 +57,7 @@ T.SetBranchAddress("part", &fPart);
 
 for (size_t j=0; j< nEvents; j++){
     T.GetEntry(j);
-    std::map<TStrin,std::set<Int_t>> selectedEvent = isValid(fHit);
+    std::map<TString,std::set<Int_t>> selectedEvent = isValid(fHit);
     if (selectedEvent.empty()) { continue; }
 
     for (size_t i=0;i<fHit->size();i++){
