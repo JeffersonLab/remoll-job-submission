@@ -56,11 +56,12 @@ jsubf.write("#SBATCH --mem=10G\n")
 jsubf.write("#SBATCH --output="+tmp+"/"+args.gen+"_%A_%a.out\n")
 jsubf.write("#SBATCH --error="+tmp+"/"+args.gen+"_%A_%a.err\n")
 jsubf.write("#SBATCH --chdir="+args.work_dir+"\n")
+jsubf.write("mkdir ${SLURM_JOB_ID}\n")
 jsubf.write("cd ${SLURM_JOB_ID}\n")
 jsubf.write("mkdir ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
 jsubf.write("cd ${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}\n")
 
-jsubf.write("source /site/12gev_phys/softenv.csh 2.4 \n")
+# jsubf.write("source /site/12gev_phys/softenv.csh 2.4 \n")
 for i in range(0, len(list_dir)):
      index= str(list_dir[i]).rfind(".root")
      jsubf.write("FILE["+str(i)+"]=\""+str(list_dir[i][0:index])+"\"\n")
@@ -111,7 +112,8 @@ jsubf.write("echo \"Program remoll finished with exit code $? at: `date`\"\n")
 jsubf.close()
 	        
                 
-subprocess.call("sbatch --array="+args.run_range+" "+jsub+"/"+args.gen+".sh",shell=True)
+#subprocess.call("sbatch --array="+args.run_range+" "+jsub+"/"+args.gen+".sh",shell=True)
+print("sbatch --array="+args.run_range+" "+jsub+"/"+args.gen+".sh")
 		
 		
 
