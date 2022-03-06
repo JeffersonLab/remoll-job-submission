@@ -29,6 +29,11 @@ photon_ene.push_back("all");
 photon_ene.push_back("ypless1MeV");
 photon_ene.push_back("yp1to10MeV");
 photon_ene.push_back("ypgreater10MeV");
+ 
+std::vector<TString> photon_mom;
+photon_mom.push_back("all");
+photon_mom.push_back("forward");
+photon_mom.push_back("backward");
 
 TString detector = detid;
 TString pid = "photon";
@@ -38,12 +43,14 @@ TString part;
 
 for(Int_t j=0; j<sector.size(); j++){
  for(Int_t k=0; k<photon_ene.size();k++){
-   part= Form("pr_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data());
+  for(Int_t l=0; l<photon_mom.size();l++){
+   part= Form("pr_%s_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data(), photon_mom[l].Data());
    h_vz[part]=new TH1D(part+"_vz", Form("%s_vz rate-weighted vertex, Generator=%s", part.Data(), gen.Data()), 360, -6000, 30000);
    h_xy[part]=new TH2D(part+"_xy", Form("%s_xy rate-weighted distribution MD, Generator=%s", part.Data(), gen.Data() ), 520, -1300, 1300, 520, -1300, 1300);
    h_r[part]=new TH1D(part+"_r", Form("%s_r rate-weighted distribution MD, Generator=%s", part.Data(), gen.Data()), 400, 0, 2000);
    h_ph[part]=new TH1D(part+"_ph", Form("%s_ph rate-weighted distribution MD, Generator=%s", part.Data(), gen.Data()), 400,-4,4);
-  }
+  }  
+ }
 }
 
 Double_t fRate=0;
@@ -66,7 +73,7 @@ for (size_t j=0; j< nEvents; j++){
         Int_t sec=findSector(hit.x, hit.y);
         Double_t rate=0;
      
-         std::map<TString, Bool_t> sector_cut{ {"all", 1},  \
+        std::map<TString, Bool_t> sector_cut{ {"all", 1},  \
                                               {"open", sec==3}, \
                                               {"trans", sec==2}, \
                                               {"closed", sec==1} };
@@ -76,6 +83,10 @@ for (size_t j=0; j< nEvents; j++){
                                                  {"yp1to10MeV", selectedEvent["y1to10MeV"].find(hit.trid) != selectedEvent["y1to10MeV"].end()}, \
                                                  {"ypgreater10MeV", selectedEvent["ypgreater10MeV"].find(hit.trid) != selectedEvent["ypgreater10MeV"].end()} };
 
+        std::map<TString, Bool_t> photon_mom_cut{ {"all", 1},  \
+                                                  {"forward", hit.pz>0}, \
+                                                  {"backward", hit.pz<=0} };
+                                              
         std::map<TString,Bool_t> detector_cut{ {"MD", hit.det==28}, \
                                                {"Col2Ent", hit.det==38}, \
                                                {"Col2Exit", hit.det==39}, \
@@ -117,18 +128,20 @@ for (size_t j=0; j< nEvents; j++){
      
         for (Int_t j=0; j<sector.size(); j++){
          for(Int_t k=0; k<photon_ene.size(); k++){
-          part= Form("pr_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data());
-          Bool_t selectedHit =  detector_cut[detector] && \
-                                sector_cut[sector[j]]  && \
-                                pid_cut[pid] && \
-                                photon_ene_cut[photon_ene[k]];
-          if (selectedHit){
-           h_vz[part]->Fill(hit.vz, rate*weight);
-           h_xy[part]->Fill(hit.x, hit.y, rate*weight);
-           h_r[part]->Fill(hit.r, rate*weight);
-           h_ph[part]->Fill(hit.ph, rate*weight);
+          for(Int_t l=0; l<photon_mom.size(); l++){
+           part= Form("pr_%s_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data(), photon_mom[l].Data());
+           Bool_t selectedHit =  detector_cut[detector] && \
+                                 sector_cut[sector[j]]  && \
+                                 pid_cut[pid] && \
+                                 photon_ene_cut[photon_ene[k]] && \
+                                 photon_mom_cut[photon_mom[l]];
+           if (selectedHit){
+            h_vz[part]->Fill(hit.vz, rate*weight);
+            h_xy[part]->Fill(hit.x, hit.y, rate*weight);
+            h_r[part]->Fill(hit.r, rate*weight);
+            h_ph[part]->Fill(hit.ph, rate*weight);
+           }
           }
-
          }
         }
           
@@ -138,11 +151,13 @@ for (size_t j=0; j< nEvents; j++){
 
 for (Int_t j=0; j<sector.size(); j++){
  for(Int_t k=0; k<photon_ene.size(); k++){
-  part= Form("pr_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data());
-  h_vz[part]->SetDirectory(subdir);
-  h_xy[part]->SetDirectory(subdir);
-  h_r[part]->SetDirectory(subdir);
-  h_ph[part]->SetDirectory(subdir);
+  for(Int_t l=0; l<photon_mom.size(); l++){
+   part= Form("pr_%s_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data(), photon_mom[l].Data());
+   h_vz[part]->SetDirectory(subdir);
+   h_xy[part]->SetDirectory(subdir);
+   h_r[part]->SetDirectory(subdir);
+   h_ph[part]->SetDirectory(subdir);
+  }
  }
 }
 f->Write();
