@@ -26,7 +26,7 @@ TLegend *l=new TLegend(0.6,0.6,0.9,0.9);
 TFile *f =new TFile(Form("%s/beam.root", loc.Data()));
   
 for(Int_t k=0; k<detector.size(); k++){
- part= Form("pr_%s_%s_%s_%s", detector[k].Data(), sector.Data(), pid.Data(), suff.Data());
+ TString part= Form("pr_%s_%s_%s_%s", detector[k].Data(), sector.Data(), pid.Data(), suff.Data());
  TH1F* h= (TH1F*) ((TDirectory*) f->Get(detector[k]))->Get(part);
  h->SetDirectory(0);
  l->AddEntry(h, detector[k]);
