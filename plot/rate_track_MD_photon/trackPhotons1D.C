@@ -24,6 +24,8 @@ det.push_back("MD");
 THStack hs;
 TLegend *l=new TLegend(0.6,0.6,0.9,0.9);
 TFile *f =new TFile(Form("%s/beam.root", loc.Data()));
+TCanvas *c = new TCanvas("c", "c", 800, 600);
+c->SetMargin(0.13,0.13, 0.13, 0.13);
   
 for(Int_t k=0; k<detector.size(); k++){
  TString part= Form("pr_%s_%s_%s_%s", detector[k].Data(), sector.Data(), pid.Data(), suff.Data());
