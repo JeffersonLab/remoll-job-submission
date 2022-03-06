@@ -1,8 +1,6 @@
-Int_t trackPhotons1D(TString loc, TString sector, Int_t nFiles, TString det, TString suff){
+Int_t trackPhotons1D(TString loc, TString sector, Int_t nFiles, TString pid, TString suff){
 
 Float_t scale = 1.0/nFiles;
-
-TString pid = "photon";
   
 std::vector<TString>  detector;
 det.push_back("Col2Ent");
