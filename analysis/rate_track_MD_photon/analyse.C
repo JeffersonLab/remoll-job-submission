@@ -15,6 +15,7 @@ TDirectory* subdir = f->mkdir(detid);
 
 std::map<TString, TH1D*> h_vz;
 std::map<TString, TH2D*> h_xy;
+std::map<TString, TH2D*> h_prpz;
 std::map<TString, TH1D*> h_r;
 std::map<TString, TH1D*> h_ph;
 
@@ -46,9 +47,10 @@ for(Int_t j=0; j<sector.size(); j++){
   for(Int_t l=0; l<photon_mom.size();l++){
    part= Form("pr_%s_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data(), photon_mom[l].Data());
    h_vz[part]=new TH1D(part+"_vz", Form("%s_vz rate-weighted vertex, Generator=%s", part.Data(), gen.Data()), 360, -6000, 30000);
-   h_xy[part]=new TH2D(part+"_xy", Form("%s_xy rate-weighted distribution MD, Generator=%s", part.Data(), gen.Data() ), 520, -1300, 1300, 520, -1300, 1300);
-   h_r[part]=new TH1D(part+"_r", Form("%s_r rate-weighted distribution MD, Generator=%s", part.Data(), gen.Data()), 400, 0, 2000);
-   h_ph[part]=new TH1D(part+"_ph", Form("%s_ph rate-weighted distribution MD, Generator=%s", part.Data(), gen.Data()), 400,-4,4);
+   h_xy[part]=new TH2D(part+"_xy", Form("%s_xy rate-weighted distribution, Generator=%s", part.Data(), gen.Data() ), 520, -1300, 1300, 520, -1300, 1300);
+   h_prpz[part]=new TH2D(part+"_prpz", Form("%s_prpz rate-weighted distribution, Generator=%s", part.Data(), gen.Data() ), 130, -2000, 11000, 220, -11000, 11000);
+   h_r[part]=new TH1D(part+"_r", Form("%s_r rate-weighted distribution, Generator=%s", part.Data(), gen.Data()), 400, 0, 2000);
+   h_ph[part]=new TH1D(part+"_ph", Form("%s_ph rate-weighted distribution, Generator=%s", part.Data(), gen.Data()), 400,-4,4);
   }  
  }
 }
@@ -138,6 +140,7 @@ for (size_t j=0; j< nEvents; j++){
            if (selectedHit){
             h_vz[part]->Fill(hit.vz, rate*weight);
             h_xy[part]->Fill(hit.x, hit.y, rate*weight);
+            h_prpz[part]->Fill(sqrt(hit.px*hit.px+hit.py*hit.py), hit.pz, rate*weight);
             h_r[part]->Fill(hit.r, rate*weight);
             h_ph[part]->Fill(hit.ph, rate*weight);
            }
@@ -155,6 +158,7 @@ for (Int_t j=0; j<sector.size(); j++){
    part= Form("pr_%s_%s_%s_%s_%s", detector.Data(), sector[j].Data(), pid.Data(), photon_ene[k].Data(), photon_mom[l].Data());
    h_vz[part]->SetDirectory(subdir);
    h_xy[part]->SetDirectory(subdir);
+   h_prpz[part]->SetDirectory(subdir);
    h_r[part]->SetDirectory(subdir);
    h_ph[part]->SetDirectory(subdir);
   }
