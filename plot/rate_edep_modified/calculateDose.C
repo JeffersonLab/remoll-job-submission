@@ -1,5 +1,5 @@
 Int_t calculateDose(TString input, TString type, Int_t scale, bool
-    fixed_range=true){
+    fixed_range=true, Int_t detector=1){
 
 TFile *f =new TFile(Form("%s",input.Data()));
 Float_t weight = 65*344*24*60*60/(40e-9*1.3*1e3*1e6);
@@ -73,7 +73,7 @@ c->Print(Form("%s.png", type.Data()));
 
 
 TCanvas *c1=new TCanvas();
-h_clone[1][0]->Draw("colz");
+h_clone[detector][0]->Draw("colz");
 TLine *l=new TLine(5937.67,0,5937.67, 300);
 TLine *l1=new TLine(6972.42,0,6972.42, 300);
 TLine *l2=new TLine(7964.635,0,7964.35, 300);
