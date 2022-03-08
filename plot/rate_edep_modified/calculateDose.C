@@ -1,4 +1,5 @@
-Int_t calculateDose(TString input, TString type, Int_t scale){
+Int_t calculateDose(TString input, TString type, Int_t scale, bool
+    fixed_range=true){
 
 TFile *f =new TFile(Form("%s",input.Data()));
 Float_t weight = 65*344*24*60*60/(40e-9*1.3*1e3*1e6);
@@ -42,13 +43,27 @@ for(Int_t i=1;i<=7; i++){
 	
 }
 
+Int_t nlevels=4;
+Double_t levels[nlevels];
+levels[0]=0.0;
+levels[1]=50.0;
+levels[2]=80.0;
+levels[3]=160.0;
+
 c->Divide(3,3); 
  for(Int_t i=1;i<=7;i++){
 c->cd(i);
 gPad->SetMargin(0.15,0.15, 0.15, 0.15);
 h_clone[i][0]->SetTitle("Dose(MGy)");
 h_clone[i][0]->SetTitleSize(0.06);
+/* if ( fixed_range == kTrue ) { */
+/*   h_clone[i][0]->SetContour(nlevels, levels); */
+/* } */
 h_clone[i][0]->Draw("colz");
+if ( fixed_range == true ) {
+  h_clone[i][0]->SetContour(nlevels, levels);
+  h_clone[i][0]->GetZaxis()->SetRangeUser(0,200);
+}
 h_clone[i][0]->GetZaxis()->SetLabelSize(0.06);
 h_clone[i][0]->GetYaxis()->SetLabelSize(0.06);
 h_clone[i][0]->GetXaxis()->SetLabelSize(0.06);
