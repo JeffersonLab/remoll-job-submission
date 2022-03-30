@@ -140,7 +140,7 @@ for (size_t j=0; j< nEvents; j++){
            if (selectedHit){
             h_vz[part]->Fill(hit.vz, rate*weight);
             h_xy[part]->Fill(hit.x, hit.y, rate*weight);
-            h_prpz[part]->Fill(sqrt(hit.px*hit.px+hit.py*hit.py), hit.pz, rate*weight);
+            h_prpz[part]->Fill(hit.pz, sqrt(hit.px*hit.px+hit.py*hit.py), rate*weight);
             h_r[part]->Fill(hit.r, rate*weight);
             h_ph[part]->Fill(hit.ph, rate*weight);
            }
