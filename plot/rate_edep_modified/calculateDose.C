@@ -67,7 +67,9 @@ if ( fixed_range == true ) {
 h_clone[i][0]->GetZaxis()->SetLabelSize(0.06);
 h_clone[i][0]->GetYaxis()->SetLabelSize(0.06);
 h_clone[i][0]->GetXaxis()->SetLabelSize(0.06);
-h_clone[i][0]->GetXaxis()->SetRangeUser(5000,8000);
+h_clone[i][0]->GetXaxis()->SetRangeUser(5000,12000);
+cout << "Coil " << i << " Total Dose = " << h_clone[i][0]->Integral();
+cout << " MGy\n";
 } 
 c->Print(Form("%s.png", type.Data()));
 
