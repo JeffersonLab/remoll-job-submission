@@ -120,9 +120,10 @@ jsubf.write("echo \"Current working directory is `pwd`\"\n")
 # jsubf.write(args.src+"/"+args.version+"/build/remoll "+macro+"\n")
 jsubf.write("build/remoll "+macro+"\n")
 jsubf.write("echo \"Program remoll finished with exit code $? at: `date`\"\n")
-jsubf.write("cp "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/"+args.gen+"_${SLURM_JOBID}_${SLURM_ARRAY_TASK_ID}.root "+macro+" "+out+"\n")
+jsubf.write("mv "+args.work_dir+"/${SLURM_ARRAY_JOB_ID}/"+args.gen+"_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}_incomplete.root "+out+"/${SLURM_ARRAY_JOB_ID}/"+args.gen+"_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}_complete.root \n")
+# jsubf.write("rm -rf "+args.work_dir+"/${SLURM_ARRAY_JOB_ID}/"+args.gen+"_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}_incomplete.root "+out+"/${SLURM_ARRAY_JOB_ID}/"+args.gen+"_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}_complete.root \n")
 # jsubf.write("rm -rf "+args.work_dir+"/${SLURM_JOB_ID}/${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}")
-jsubf.write("rm -rf "+args.work_dir+"/${SLURM_JOB_ID}")
+# jsubf.write("rm -rf "+args.work_dir+"/${SLURM_ARRAY_JOB_ID}")
 
 jsubf.close()
 	        
