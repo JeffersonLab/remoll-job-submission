@@ -1,5 +1,34 @@
 using namespace ROOT;
 
+int in_coil_4_epoxy(Double_t r, Double_t z){
+
+  const Int_t n_vertices = 4;
+  const Double_t z_offset = 5000.0;
+  /* Double_t z_vertex[n_vertices] = {13096.987, 14763.020, 16115.011, 16664.245}; */
+  // Correct z_vertex positions for z_offset
+  Double_t z_vertex[n_vertices] = {8096.987, 9763.020, 11115.011, 11664.245};
+  Double_t slope[n_vertices-1] = {0.013111, 0.060271, -0.056657};
+  /* Double_t intercept[n_vertices-1] = {-114.912, -811.132, 1073.168}; */
+  // Correct radial intercepts for historical z_offset
+  Double_t intercept[n_vertices-1] = {-49.357, -509.777, 789.883};
+
+  const Double_t delta_r_epoxy = 1.0;
+
+  for (Int_t i = 0; i < n_vertices; i++) {
+    if (z >= z_vertex[i] && z < z_vertex[i+1]) {
+      Double_t r_outer = slope[i]*z + intercept[i];
+      Double_t r_epoxy = r_outer + delta_r_epoxy;
+      if (r <= r_epoxy) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+
+  
+}
+
 int analyse(TString source, TString out, TString gen, Double_t open_min, Double_t open_max, Double_t trans_min, Double_t trans_max, Double_t closed_min, Double_t closed_max){
 
 TChain T("T");
@@ -207,7 +236,7 @@ for (size_t j=0;j< nEvents;j++){
                                             }
 
                                     }
-                                    if(hit.r<90){
+                                    if(in_coil_4_epoxy(hit.r, hit.z) == 1){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                                     }
