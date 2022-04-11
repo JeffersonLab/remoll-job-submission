@@ -12,7 +12,7 @@ int in_coil_4_epoxy(Double_t r, Double_t z){
   // Correct radial intercepts for historical z_offset
   Double_t intercept[n_vertices-1] = {-49.357, -509.777, 789.883};
 
-  const Double_t delta_r_epoxy = 1.0;
+  const Double_t delta_r_epoxy = 0.0;
 
   for (Int_t i = 0; i < n_vertices; i++) {
     if (z >= z_vertex[i] && z < z_vertex[i+1]) {
@@ -75,9 +75,9 @@ for(Int_t k=0;k<energy_bins;k++){
   part= Form("pr_%d_E%d",i+1,  k);
   std::cout<< part<< std::endl;
   h_ue_rz_left[part]=new TH2D(part+"_ue_rz_left", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200, 60, 0, 60);
-  h_de_rz_left[part]=new TH2D(part+"_de_rz_left", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 90, 0, 90);
+  h_de_rz_left[part]=new TH2D(part+"_de_rz_left", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 450, 0, 450);
   h_ue_rz_right[part]=new TH2D(part+"_ue_rz_right", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200, 60, 0, 60);
-  h_de_rz_right[part]=new TH2D(part+"_de_rz_right", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 90, 0, 90);
+  h_de_rz_right[part]=new TH2D(part+"_de_rz_right", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 450, 0, 450);
   h_ue_phz_bottom[part]=new TH2D(part+"_ue_phz_bottom", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200, 50 , -25.0, 25.0);
   h_de_phz_bottom[part]=new TH2D(part+"_de_phz_bottom", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 50, -25.0, 25.0);
   h_ue_rz_left_1D[part]=new TH1D(part+"_ue_rz_left_1D", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200);
@@ -223,14 +223,14 @@ for (size_t j=0;j< nEvents;j++){
 				  }else{
                                      if(XY.Y()>23.7){
                                             h_de_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r<=90){
+                                            if(hit.r<=450){
                                                     h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
                                     }
                                     if(XY.Y()<-23.7){
                                             h_de_rz_right[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=90){
+                                            if(hit.r<=450){
                                                     h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
