@@ -176,7 +176,7 @@ std::map<TString, std::set<Int_t>> isValid(std::vector<remollGenericDetectorHit_
  // return true if there is atleast one hit from a photon in ring 5 from an event
  for (size_t i=0;i<fHit->size();i++){
   remollGenericDetectorHit_t hit=fHit->at(i);
-  if (!(hit.det==28 && hit.pid==22 && hit.r>900 && hit.r<=1060)) continue;
+  if (!(hit.det==28 && hit.pid==22 && hit.r>920 && hit.r<=1060)) continue;
 
   found["all"].insert(hit.trid);
   if(hit.p<=1){
