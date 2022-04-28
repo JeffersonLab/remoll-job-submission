@@ -81,8 +81,36 @@ Double_t coil_sd = TMath::StdDev(coil_dose.begin(), coil_dose.end());
 Double_t coil_err = coil_sd/TMath::Sqrt(7);
 cout << "Average : " << type.Data() << " : " << coil_mean << "\n";
 cout << "Uncertainty : " << type.Data() << " : " << coil_err << "\n";
+
 c->Print(Form("%s.png", type.Data()));
 
+map<Int_t, vector<Double_t>> subcoil_dose;
+
+for (Int_t j=2; j<=7; j++) {
+  h_clone[1][0]->Add(h_clone[j][0]);
+}
+h_clone[1][0]->Scale(1.0/7.0);
+
+/* cout << h_clone[1][0]->GetNbinsX() << " : " << h_clone[1][0]->GetNbinsY() << */
+/* endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(28) << endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(29) << endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(54) << endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(55) << endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(79) << endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(80) << endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(187) << endl; */
+/* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(180) << endl; */
+
+Double_t integral_value, integral_error;
+integral_value = h_clone[1][0]->IntegralAndError(1, 29, 0, 50, integral_error);
+cout << "Subcoil 1 : " << integral_value << " +/- " << integral_error << endl;
+integral_value = h_clone[1][0]->IntegralAndError(30, 54, 0, 50, integral_error);
+cout << "Subcoil 2 : " << integral_value << " +/- " << integral_error << endl;
+integral_value = h_clone[1][0]->IntegralAndError(55, 80, 0, 50, integral_error);
+cout << "Subcoil 3 : " << integral_value << " +/- " << integral_error << endl;
+integral_value = h_clone[1][0]->IntegralAndError(81, 187, 0, 50, integral_error);
+cout << "Subcoil 4 : " << integral_value << " +/- " << integral_error << endl;
 
 /* TCanvas *c1=new TCanvas(); */
 /* h_clone[detector][0]->Draw("colz"); */
