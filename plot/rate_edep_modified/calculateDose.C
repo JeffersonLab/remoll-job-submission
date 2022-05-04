@@ -82,7 +82,14 @@ Double_t coil_err = coil_sd/TMath::Sqrt(7);
 cout << "Average : " << type.Data() << " : " << coil_mean << "\n";
 cout << "Uncertainty : " << type.Data() << " : " << coil_err << "\n";
 
-c->Print(Form("%s.png", type.Data()));
+TString str_range = "";
+if (fixed_range==true) {
+  str_range = "_4level";
+}
+
+TString input_trunc(input(0, input.First(".")));
+
+c->Print(Form("%s-%s%s.png", type.Data(), input_trunc.Data(), str_range.Data()));
 
 map<Int_t, vector<Double_t>> subcoil_dose;
 
@@ -103,13 +110,13 @@ h_clone[1][0]->Scale(1.0/7.0);
 /* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(180) << endl; */
 
 Double_t integral_value, integral_error;
-integral_value = h_clone[1][0]->IntegralAndError(1, 29, 0, 50, integral_error);
+integral_value = h_clone[1][0]->IntegralAndError(1, 29, 0, 450, integral_error);
 cout << "Subcoil 1 : " << integral_value << " +/- " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(30, 54, 0, 50, integral_error);
+integral_value = h_clone[1][0]->IntegralAndError(30, 54, 0, 450, integral_error);
 cout << "Subcoil 2 : " << integral_value << " +/- " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(55, 80, 0, 50, integral_error);
+integral_value = h_clone[1][0]->IntegralAndError(55, 80, 0, 450, integral_error);
 cout << "Subcoil 3 : " << integral_value << " +/- " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(81, 187, 0, 50, integral_error);
+integral_value = h_clone[1][0]->IntegralAndError(81, 187, 0, 450, integral_error);
 cout << "Subcoil 4 : " << integral_value << " +/- " << integral_error << endl;
 
 /* TCanvas *c1=new TCanvas(); */
