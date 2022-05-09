@@ -53,6 +53,9 @@ levels[3]=160.0;
 
 vector<Double_t> coil_dose;
 
+cout << input.Data() << endl;
+cout << type.Data() << endl;
+
 c->Divide(3,3); 
 for(Int_t i=1;i<=7;i++){
   c->cd(i);
@@ -74,13 +77,12 @@ for(Int_t i=1;i<=7;i++){
   /* cout << "Coil " << i << " Total Dose = " << h_clone[i][0]->Integral(); */
   /* cout << " MGy\n"; */
   coil_dose.push_back(h_clone[i][0]->Integral());
-  cout << i << " : " << type.Data() << " : " << h_clone[i][0]->Integral() << "\n";
+  /* cout << i << " : " << type.Data() << " : " << h_clone[i][0]->Integral() << "\n"; */
 } 
-Double_t coil_mean = TMath::Mean(coil_dose.begin(), coil_dose.end());
-Double_t coil_sd = TMath::StdDev(coil_dose.begin(), coil_dose.end());
-Double_t coil_err = coil_sd/TMath::Sqrt(7);
-cout << "Average : " << type.Data() << " : " << coil_mean << "\n";
-cout << "Uncertainty : " << type.Data() << " : " << coil_err << "\n";
+/* Double_t coil_mean = TMath::Mean(coil_dose.begin(), coil_dose.end()); */
+/* Double_t coil_sd = TMath::StdDev(coil_dose.begin(), coil_dose.end()); */
+/* Double_t coil_err = coil_sd/TMath::Sqrt(7); */
+/* cout << "Total : " << coil_mean << " : " << coil_err << endl; */
 
 TString str_range = "";
 if (fixed_range==true) {
@@ -110,14 +112,16 @@ h_clone[1][0]->Scale(1.0/7.0);
 /* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(180) << endl; */
 
 Double_t integral_value, integral_error;
+integral_value = h_clone[1][0]->IntegralAndError(1, 187, 0, 450, integral_error);
+cout << "T : " << integral_value << " +/- " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(1, 29, 0, 450, integral_error);
-cout << "Subcoil 1 : " << integral_value << " +/- " << integral_error << endl;
+cout << "1 : " << integral_value << " +/- " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(30, 54, 0, 450, integral_error);
-cout << "Subcoil 2 : " << integral_value << " +/- " << integral_error << endl;
+cout << "2 : " << integral_value << " +/- " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(55, 80, 0, 450, integral_error);
-cout << "Subcoil 3 : " << integral_value << " +/- " << integral_error << endl;
+cout << "3 : " << integral_value << " +/- " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(81, 187, 0, 450, integral_error);
-cout << "Subcoil 4 : " << integral_value << " +/- " << integral_error << endl;
+cout << "4 : " << integral_value << " +/- " << integral_error << endl;
 
 /* TCanvas *c1=new TCanvas(); */
 /* h_clone[detector][0]->Draw("colz"); */
