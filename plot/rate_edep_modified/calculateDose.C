@@ -1,5 +1,5 @@
 Int_t calculateDose(TString input, TString type, Int_t scale, bool
-    fixed_range=false, Int_t detector=1){
+    fixed_range=true, Int_t detector=1){
 
 TFile *f =new TFile(Form("%s",input.Data()));
 Float_t weight = 65*344*24*60*60/(40e-9*1.3*1e3*1e6);
@@ -113,15 +113,15 @@ h_clone[1][0]->Scale(1.0/7.0);
 
 Double_t integral_value, integral_error;
 integral_value = h_clone[1][0]->IntegralAndError(1, 187, 0, 450, integral_error);
-cout << "T : " << integral_value << " +/- " << integral_error << endl;
+cout << "I : " << integral_value << " : " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(1, 29, 0, 450, integral_error);
-cout << "1 : " << integral_value << " +/- " << integral_error << endl;
+cout << "1 : " << integral_value << " : " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(30, 54, 0, 450, integral_error);
-cout << "2 : " << integral_value << " +/- " << integral_error << endl;
+cout << "2 : " << integral_value << " : " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(55, 80, 0, 450, integral_error);
-cout << "3 : " << integral_value << " +/- " << integral_error << endl;
+cout << "3 : " << integral_value << " : " << integral_error << endl;
 integral_value = h_clone[1][0]->IntegralAndError(81, 187, 0, 450, integral_error);
-cout << "4 : " << integral_value << " +/- " << integral_error << endl;
+cout << "4 : " << integral_value << " : " << integral_error << endl;
 
 /* TCanvas *c1=new TCanvas(); */
 /* h_clone[detector][0]->Draw("colz"); */
@@ -140,7 +140,7 @@ return 0;
 
 }
 
-Int_t batchDose(TString input, Int_t scale, bool fixed_range=false){
+Int_t batchDose(TString input, Int_t scale, bool fixed_range=true){
   
   calculateDose(input, "de_phz_bottom", scale, fixed_range);
   calculateDose(input, "de_rz_left", scale, fixed_range);
