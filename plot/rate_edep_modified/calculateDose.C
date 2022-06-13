@@ -1,5 +1,5 @@
 Int_t calculateDose(TString input, TString type, Int_t scale, bool
-    fixed_range=true, Int_t detector=1){
+    fixed_range=true, Int_t detector=0, bool first_three=false){
 
 TFile *f =new TFile(Form("%s",input.Data()));
 Float_t weight = 65*344*24*60*60/(40e-9*1.3*1e3*1e6);
@@ -56,11 +56,23 @@ vector<Double_t> coil_dose;
 cout << input.Data() << endl;
 cout << type.Data() << endl;
 
-c->Divide(3,3); 
-for(Int_t i=1;i<=7;i++){
-  c->cd(i);
+Int_t i_min, i_max;
+
+if (detector == 0) {
+  c->Divide(3,3); 
+  i_min = 1;
+  i_max = 7;
+} else {
+  i_min = detector;
+  i_max = detector;
+}
+
+for(Int_t i=i_min;i<=i_max;i++){
+  if (detector == 0) {
+    c->cd(i);
+  }
   gPad->SetMargin(0.15,0.15, 0.15, 0.15);
-  h_clone[i][0]->SetTitle("Dose(MGy)");
+  h_clone[i][0]->SetTitle(Form("Septant %i Dose (MGy)", i));
   h_clone[i][0]->SetTitleSize(0.06);
   /* if ( fixed_range == kTrue ) { */
   /*   h_clone[i][0]->SetContour(nlevels, levels); */
@@ -73,25 +85,48 @@ for(Int_t i=1;i<=7;i++){
   h_clone[i][0]->GetZaxis()->SetLabelSize(0.06);
   h_clone[i][0]->GetYaxis()->SetLabelSize(0.06);
   h_clone[i][0]->GetXaxis()->SetLabelSize(0.06);
-  h_clone[i][0]->GetXaxis()->SetRangeUser(5000,12000);
+  h_clone[i][0]->GetYaxis()->SetTitleSize(0.06);
+  h_clone[i][0]->GetXaxis()->SetTitleSize(0.06);
+  h_clone[i][0]->GetXaxis()->SetTitle("Longitudinal Position (mm)");
+  if (type == "de_phz_bottom") {
+    h_clone[i][0]->GetYaxis()->SetTitle("Transverse Position (mm)");
+  } else {
+    h_clone[i][0]->GetYaxis()->SetTitle("Radial Position (mm)");
+  }
+  if ( first_three == true ) {
+    h_clone[i][0]->GetXaxis()->SetRangeUser(4900, 8000);
+    if (type == "de_phz_bottom") {
+      h_clone[i][0]->GetYaxis()->SetRangeUser(-15,15);
+    } else {
+      h_clone[i][0]->GetYaxis()->SetRangeUser(0, 300);
+    }
+  } else {
+    h_clone[i][0]->GetXaxis()->SetRangeUser(5000,12000);
+  }
   /* cout << "Coil " << i << " Total Dose = " << h_clone[i][0]->Integral(); */
   /* cout << " MGy\n"; */
   coil_dose.push_back(h_clone[i][0]->Integral());
   /* cout << i << " : " << type.Data() << " : " << h_clone[i][0]->Integral() << "\n"; */
 } 
-/* Double_t coil_mean = TMath::Mean(coil_dose.begin(), coil_dose.end()); */
-/* Double_t coil_sd = TMath::StdDev(coil_dose.begin(), coil_dose.end()); */
-/* Double_t coil_err = coil_sd/TMath::Sqrt(7); */
-/* cout << "Total : " << coil_mean << " : " << coil_err << endl; */
 
 TString str_range = "";
 if (fixed_range==true) {
   str_range = "_4level";
 }
 
+TString str_three = "";
+if (first_three==true) {
+  str_three = "_first3";
+}
+
+TString str_detector = "";
+if (detector != 0) {
+  str_detector = Form("_coil%i", detector);
+}
+
 TString input_trunc(input(0, input.First(".")));
 
-c->Print(Form("%s-%s%s.png", type.Data(), input_trunc.Data(), str_range.Data()));
+c->Print(Form("%s-%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_range.Data(), str_three.Data()));
 
 map<Int_t, vector<Double_t>> subcoil_dose;
 
@@ -140,11 +175,17 @@ return 0;
 
 }
 
-Int_t batchDose(TString input, Int_t scale, bool fixed_range=true){
+/* Int_t batchDose(TString input, Int_t scale, bool fixed_range=true, */
+/*     Int_t detector=0, bool first_three=false){ */
+Int_t batchDose(TString input, Int_t scale, Int_t detector=0) {
   
-  calculateDose(input, "de_phz_bottom", scale, fixed_range);
-  calculateDose(input, "de_rz_left", scale, fixed_range);
-  calculateDose(input, "de_rz_right", scale, fixed_range);
+  calculateDose(input, "de_phz_bottom", scale, false, detector, true);
+  calculateDose(input, "de_rz_left", scale, false, detector, true);
+  calculateDose(input, "de_rz_right", scale, false, detector, true);
+
+  calculateDose(input, "de_phz_bottom", scale, true, detector, true);
+  calculateDose(input, "de_rz_left", scale, true, detector, true);
+  calculateDose(input, "de_rz_right", scale, true, detector, true);
 
   return 0;
 }
