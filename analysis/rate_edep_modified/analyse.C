@@ -25,8 +25,33 @@ int in_coil_4_epoxy(Double_t r, Double_t z){
   }
 
   return 0;
+}
 
-  
+Double_t in_coil_1_nose_epoxy(Double_t r, Double_t z, Double_t r_outer) {
+
+  /* const Double_t r_outer = 67.292;        // Outer radius of epoxy */
+  const Double_t r_inner = r_outer - 1.0; // Inner radius of epoxy
+
+  const Double_t r_0 = 108.292;
+  const Double_t z_0 = 0.0;
+  Double_t delta_r = r - r_0;
+  Double_t delta_z = z - z_0;
+  Double_t phi = TMath::ATan(delta_r/delta_z);
+  Double_t radius = TMath::Sqrt(delta_r*delta_r + delta_z*delta_z);
+
+  if (r_outer > radius && radius > r_inner) {
+    Double_t circ_pos;
+    circ_pos = r_outer * phi;
+    /* cout << " radius = " << radius; */
+    /* cout << " circ_pos = " << circ_pos; */
+    /* cout << " phi = " << phi; */
+    /* cout << " r_outer = " << r_outer; */
+    /* cout << endl; */
+    return circ_pos;
+  }
+
+  return -100000;
+
 }
 
 int analyse(TString source, TString out, TString gen, Double_t open_min, Double_t open_max, Double_t trans_min, Double_t trans_max, Double_t closed_min, Double_t closed_max){
@@ -51,12 +76,14 @@ std::map<TString, TH2D*> h_ue_rz_right;
 std::map<TString, TH2D*> h_de_rz_right;
 std::map<TString, TH2D*> h_ue_phz_bottom;
 std::map<TString, TH2D*> h_de_phz_bottom;
+std::map<TString, TH2D*> h_de_phph_nose;
 std::map<TString, TH1D*> h_ue_rz_left_1D;
 std::map<TString, TH1D*> h_de_rz_left_1D;
 std::map<TString, TH1D*> h_ue_rz_right_1D;
 std::map<TString, TH1D*> h_de_rz_right_1D;
 std::map<TString, TH1D*> h_ue_phz_bottom_1D;
 std::map<TString, TH1D*> h_de_phz_bottom_1D;
+std::map<TString, TH1D*> h_de_phph_nose_1D;
 
 
 
@@ -80,12 +107,14 @@ for(Int_t k=0;k<energy_bins;k++){
   h_de_rz_right[part]=new TH2D(part+"_de_rz_right", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 450, 0, 450);
   h_ue_phz_bottom[part]=new TH2D(part+"_ue_phz_bottom", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200, 50 , -25.0, 25.0);
   h_de_phz_bottom[part]=new TH2D(part+"_de_phz_bottom", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 50, -25.0, 25.0);
+  h_de_phph_nose[part]=new TH2D(part+"_de_phph_nose", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225, 50, -25.0, 25.0);
   h_ue_rz_left_1D[part]=new TH1D(part+"_ue_rz_left_1D", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200);
   h_de_rz_left_1D[part]=new TH1D(part+"_de_rz_left_1D", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300);
   h_ue_rz_right_1D[part]=new TH1D(part+"_ue_rz_right_1D", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200);
   h_de_rz_right_1D[part]=new TH1D(part+"_de_rz_right_1D", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300);
   h_ue_phz_bottom_1D[part]=new TH1D(part+"_ue_phz_bottom_1D", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200);
   h_de_phz_bottom_1D[part]=new TH1D(part+"_de_phz_bottom_1D", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300);
+  h_de_phph_nose_1D[part]=new TH1D(part+"_de_phph_nose_1D", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225);
 
 
   }
@@ -156,7 +185,7 @@ for (size_t j=0;j< nEvents;j++){
 				    }
 				}
 				if(hit.det==(3008+i)){
-				  if(hit.z<5938){
+                                  if(hit.z<5938){
 				    if(XY.Y()>20.7/2.0){
                                             h_de_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
                                             if(hit.r>=41 && hit.r<=61){
@@ -176,6 +205,21 @@ for (size_t j=0;j< nEvents;j++){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                                     }   
+                                    /* if (hit.z<5001.227) { */
+                                    if (hit.yl>0.0) {
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 67.292);
+                                      if (circ_pos > -100000) {
+                                        /* cout << " circ_pos = " << circ_pos; */
+                                        /* cout << " XY.Y = " << XY.Y(); */
+                                        /* cout << " hit.edep = " << hit.edep; */
+                                        /* cout << " fRate = " << fRate; */
+                                        /* cout << " weight = " << weight; */
+                                        /* cout << endl; */
+                                        h_de_phph_nose[part]->Fill(circ_pos,
+                                            XY.Y(), hit.edep*(fRate)*weight);
+                                        h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                                      }
+                                    }
 				  }else if(hit.z>=5938 && hit.z<6973){
                                     if(XY.Y()>23.9/2.0){
                                             h_de_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
@@ -195,6 +239,20 @@ for (size_t j=0;j< nEvents;j++){
                                     if(hit.r<44.5){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                                    }
+                                    if (hit.yl>0.0) {
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 87.935);
+                                      if (circ_pos > -100000) {
+                                        /* cout << " circ_pos = " << circ_pos; */
+                                        /* cout << " XY.Y = " << XY.Y(); */
+                                        /* cout << " hit.edep = " << hit.edep; */
+                                        /* cout << " fRate = " << fRate; */
+                                        /* cout << " weight = " << weight; */
+                                        /* cout << endl; */
+                                        h_de_phph_nose[part]->Fill(circ_pos,
+                                            XY.Y(), hit.edep*(fRate)*weight);
+                                        h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                                      }
                                     }
 
 
@@ -218,6 +276,20 @@ for (size_t j=0;j< nEvents;j++){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                                     }
+                                    if (hit.yl>0.0) {
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 110.27);
+                                      if (circ_pos > -100000) {
+                                        /* cout << " circ_pos = " << circ_pos; */
+                                        /* cout << " XY.Y = " << XY.Y(); */
+                                        /* cout << " hit.edep = " << hit.edep; */
+                                        /* cout << " fRate = " << fRate; */
+                                        /* cout << " weight = " << weight; */
+                                        /* cout << endl; */
+                                        h_de_phph_nose[part]->Fill(circ_pos,
+                                            XY.Y(), hit.edep*(fRate)*weight);
+                                        h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                                      }
+                                    }
 
 
 				  }else{
@@ -239,6 +311,20 @@ for (size_t j=0;j< nEvents;j++){
                                     if(in_coil_4_epoxy(hit.r, hit.z) == 1){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                                    }
+                                    if (hit.yl>0.0) {
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 132.3835);
+                                      if (circ_pos > -100000) {
+                                        /* cout << " circ_pos = " << circ_pos; */
+                                        /* cout << " XY.Y = " << XY.Y(); */
+                                        /* cout << " hit.edep = " << hit.edep; */
+                                        /* cout << " fRate = " << fRate; */
+                                        /* cout << " weight = " << weight; */
+                                        /* cout << endl; */
+                                        h_de_phph_nose[part]->Fill(circ_pos,
+                                            XY.Y(), hit.edep*(fRate)*weight);
+                                        h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                                      }
                                     }
 
 				  }
@@ -265,12 +351,14 @@ for(Int_t k=0; k<energy_bins;k++){
      h_de_rz_right[part]->Write("", TObject::kOverwrite);
      h_ue_phz_bottom[part]->Write("", TObject::kOverwrite);
      h_de_phz_bottom[part]->Write("", TObject::kOverwrite);
+     h_de_phph_nose[part]->Write("", TObject::kOverwrite);
      h_ue_rz_left_1D[part]->Write("", TObject::kOverwrite);
      h_de_rz_left_1D[part]->Write("", TObject::kOverwrite);
      h_ue_rz_right_1D[part]->Write("", TObject::kOverwrite);
      h_de_rz_right_1D[part]->Write("", TObject::kOverwrite);
      h_ue_phz_bottom_1D[part]->Write("", TObject::kOverwrite);
      h_de_phz_bottom_1D[part]->Write("", TObject::kOverwrite);
+     h_de_phph_nose_1D[part]->Write("", TObject::kOverwrite);
   }
 }
 
