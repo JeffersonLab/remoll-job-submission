@@ -165,21 +165,21 @@ for (size_t j=0;j< nEvents;j++){
 			 if (hit_pid[part]){
 				if(hit.det==(4008+i)){
                                     if(XY.Y()>4.5){
-                         		    h_ue_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-					    if(hit.r>=32 && hit.r<=52){
+                         		    h_ue_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+					    if(XY.X()>=32 && XY.X()<=52){
                                                     h_ue_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
 					    }
 			            }
 				    if(XY.Y()<-4.5){
-                                            h_ue_rz_right[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=32 && hit.r<=52){
+                                            h_ue_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()>=32 && XY.X()<=52){
                                                     h_ue_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
 
 				    }
-			            if(hit.r<33){
+			            if(XY.X()<33){
 				      h_ue_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
 				      h_ue_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 				    }
@@ -187,27 +187,27 @@ for (size_t j=0;j< nEvents;j++){
 				if(hit.det==(3008+i)){
                                   if(hit.z<5938){
 				    if(XY.Y()>20.7/2.0){
-                                            h_de_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=41 && hit.r<=61){
+                                            h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()>=41 && XY.X()<=61){
                                                     h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
                                     }
                                     if(XY.Y()<-20.7/2.0){
-                                            h_de_rz_right[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=41 && hit.r<=61){
+                                            h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()>=41 && XY.X()<=61){
                                                     h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
 
                                     }
-                                    if(hit.r<42){
+                                    if(XY.X()<42){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                                     }   
                                     /* if (hit.z<5001.227) { */
                                     if (hit.yl>0.0) {
-                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 67.292);
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 67.292);
                                       if (circ_pos > -100000) {
                                         /* cout << " circ_pos = " << circ_pos; */
                                         /* cout << " XY.Y = " << XY.Y(); */
@@ -222,26 +222,26 @@ for (size_t j=0;j< nEvents;j++){
                                     }
 				  }else if(hit.z>=5938 && hit.z<6973){
                                     if(XY.Y()>23.9/2.0){
-                                            h_de_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=43.5 && hit.r<=63.5){
+                                            h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()>=43.5 && XY.X()<=63.5){
                                                     h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
                                     }
                                     if(XY.Y()<-23.9/2.0){
-                                            h_de_rz_right[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=43.5 && hit.r<=63.5){
+                                            h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()>=43.5 && XY.X()<=63.5){
                                                     h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
 
                                     }
-                                    if(hit.r<44.5){
+                                    if(XY.X()<44.5){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                                     }
                                     if (hit.yl>0.0) {
-                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 87.935);
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 87.935);
                                       if (circ_pos > -100000) {
                                         /* cout << " circ_pos = " << circ_pos; */
                                         /* cout << " XY.Y = " << XY.Y(); */
@@ -258,26 +258,26 @@ for (size_t j=0;j< nEvents;j++){
 
 				  }else if(hit.z>=6973 && hit.z<7965){
                                      if(XY.Y()>24.9/2.0){
-                                            h_de_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=46 && hit.r<=66){
+                                            h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()>=46 && XY.X()<=66){
                                                     h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
                                     }
                                     if(XY.Y()<-24.9/2.0){
-                                            h_de_rz_right[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r>=46 && hit.r<=66){
+                                            h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()>=46 && XY.X()<=66){
                                                     h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
 
                                     }
-                                    if(hit.r<47){
+                                    if(XY.X()<47){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                                     }
                                     if (hit.yl>0.0) {
-                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 110.27);
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 110.27);
                                       if (circ_pos > -100000) {
                                         /* cout << " circ_pos = " << circ_pos; */
                                         /* cout << " XY.Y = " << XY.Y(); */
@@ -294,26 +294,26 @@ for (size_t j=0;j< nEvents;j++){
 
 				  }else{
                                      if(XY.Y()>23.7){
-                                            h_de_rz_left[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r<=450){
+                                            h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()<=450){
                                                     h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
                                     }
                                     if(XY.Y()<-23.7){
-                                            h_de_rz_right[part]->Fill(hit.z, hit.r, hit.edep*(fRate)*weight);
-                                            if(hit.r<=450){
+                                            h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                                            if(XY.X()<=450){
                                                     h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
 
                                             }
 
                                     }
-                                    if(in_coil_4_epoxy(hit.r, hit.z) == 1){
+                                    if(in_coil_4_epoxy(XY.X(), hit.z) == 1){
                                       h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                                       h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                                     }
                                     if (hit.yl>0.0) {
-                                      Double_t circ_pos = in_coil_1_nose_epoxy(hit.r, hit.yl, 132.3835);
+                                      Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 132.3835);
                                       if (circ_pos > -100000) {
                                         /* cout << " circ_pos = " << circ_pos; */
                                         /* cout << " XY.Y = " << XY.Y(); */
