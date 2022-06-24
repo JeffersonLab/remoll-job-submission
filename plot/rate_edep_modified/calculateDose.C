@@ -179,13 +179,23 @@ return 0;
 /*     Int_t detector=0, bool first_three=false){ */
 Int_t batchDose(TString input, Int_t scale, Int_t detector=0) {
   
-  calculateDose(input, "de_phz_bottom", scale, false, detector, true);
-  calculateDose(input, "de_rz_left", scale, false, detector, true);
-  calculateDose(input, "de_rz_right", scale, false, detector, true);
+  int fixed_range = false;
+  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, true);
+  calculateDose(input, "de_rz_left", scale, fixed_range, detector, true);
+  calculateDose(input, "de_rz_right", scale, fixed_range, detector, true);
 
-  calculateDose(input, "de_phz_bottom", scale, true, detector, true);
-  calculateDose(input, "de_rz_left", scale, true, detector, true);
-  calculateDose(input, "de_rz_right", scale, true, detector, true);
+  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, false);
+  calculateDose(input, "de_rz_left", scale, fixed_range, detector, false);
+  calculateDose(input, "de_rz_right", scale, fixed_range, detector, false);
+
+  fixed_range = true;
+  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, true);
+  calculateDose(input, "de_rz_left", scale, fixed_range, detector, true);
+  calculateDose(input, "de_rz_right", scale, fixed_range, detector, true);
+
+  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, false);
+  calculateDose(input, "de_rz_left", scale, fixed_range, detector, false);
+  calculateDose(input, "de_rz_right", scale, fixed_range, detector, false);
 
   return 0;
 }
