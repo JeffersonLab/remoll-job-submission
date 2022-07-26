@@ -27,12 +27,13 @@ int in_coil_4_epoxy(Double_t r, Double_t z){
   return 0;
 }
 
-Double_t in_coil_1_nose_epoxy(Double_t r, Double_t z, Double_t r_outer) {
+Double_t in_coil_nose_epoxy(Double_t r, Double_t z, 
+    Double_t r_outer, Double_t r_0) {
 
   /* const Double_t r_outer = 67.292;        // Outer radius of epoxy */
   const Double_t r_inner = r_outer - 1.0; // Inner radius of epoxy
 
-  const Double_t r_0 = 108.292;
+  /* const Double_t r_0 = 108.292; */
   const Double_t z_0 = 0.0;
   Double_t delta_r = r - r_0;
   Double_t delta_z = z - z_0;
@@ -107,7 +108,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
       h_de_rz_right[part]=new TH2D(part+"_de_rz_right", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 450, 0, 450);
       h_ue_phz_bottom[part]=new TH2D(part+"_ue_phz_bottom", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200, 50 , -25.0, 25.0);
       h_de_phz_bottom[part]=new TH2D(part+"_de_phz_bottom", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300, 50, -25.0, 25.0);
-      h_de_phph_nose[part]=new TH2D(part+"_de_phph_nose", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225, 50, -25.0, 25.0);
+      h_de_phph_nose[part]=new TH2D(part+"_de_phph_nose", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225, 210, -25.0, 185.0);
       h_ue_rz_left_1D[part]=new TH1D(part+"_ue_rz_left_1D", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200);
       h_de_rz_left_1D[part]=new TH1D(part+"_de_rz_left_1D", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 375, 4800, 12300);
       h_ue_rz_right_1D[part]=new TH1D(part+"_ue_rz_right_1D", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 120, 800, 3200);
@@ -207,7 +208,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                 }   
                 /* if (hit.z<5001.227) { */
                 if (hit.yl>0.0) {
-                  Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 67.292);
+                  Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 67.292, 108.292);
                   if (circ_pos > -100000) {
                     /* cout << " circ_pos = " << circ_pos; */
                     /* cout << " XY.Y = " << XY.Y(); */
@@ -241,7 +242,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                   h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                 }
                 if (hit.yl>0.0) {
-                  Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 87.935);
+                  Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 87.935, 131.435);
                   if (circ_pos > -100000) {
                     /* cout << " circ_pos = " << circ_pos; */
                     /* cout << " XY.Y = " << XY.Y(); */
@@ -250,7 +251,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                     /* cout << " weight = " << weight; */
                     /* cout << endl; */
                     h_de_phph_nose[part]->Fill(circ_pos,
-                        XY.Y(), hit.edep*(fRate)*weight);
+                        XY.Y()+50.0, hit.edep*(fRate)*weight);
                     h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
                   }
                 }
@@ -277,7 +278,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                   h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                 }
                 if (hit.yl>0.0) {
-                  Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 110.27);
+                  Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 110.27, 156.27);
                   if (circ_pos > -100000) {
                     /* cout << " circ_pos = " << circ_pos; */
                     /* cout << " XY.Y = " << XY.Y(); */
@@ -286,7 +287,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                     /* cout << " weight = " << weight; */
                     /* cout << endl; */
                     h_de_phph_nose[part]->Fill(circ_pos,
-                        XY.Y(), hit.edep*(fRate)*weight);
+                        XY.Y() + 100.0, hit.edep*(fRate)*weight);
                     h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
                   }
                 }
@@ -313,7 +314,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                   h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                 }
                 if (hit.yl>0.0) {
-                  Double_t circ_pos = in_coil_1_nose_epoxy(XY.X(), hit.yl, 132.3835);
+                  Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 132.3835, 188.6295);
                   if (circ_pos > -100000) {
                     /* cout << " circ_pos = " << circ_pos; */
                     /* cout << " XY.Y = " << XY.Y(); */
@@ -322,7 +323,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                     /* cout << " weight = " << weight; */
                     /* cout << endl; */
                     h_de_phph_nose[part]->Fill(circ_pos,
-                        XY.Y(), hit.edep*(fRate)*weight);
+                        XY.Y() + 150.0, hit.edep*(fRate)*weight);
                     h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
                   }
                 }
