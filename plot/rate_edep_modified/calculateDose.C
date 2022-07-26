@@ -31,14 +31,14 @@ for(Int_t i=1;i<=7; i++){
         h_clone[i][0]->RebinX(2);
 	
 	
-	TLine *l=new TLine(5937.67,0,5937.67, 300);
-	l->Draw();
+	/* TLine *l=new TLine(5937.67,0,5937.67, 300); */
+	/* l->Draw(); */
 	
-	TLine *l1=new TLine(6972.42,0,6972.42, 300);
-	l1->Draw();
+	/* TLine *l1=new TLine(6972.42,0,6972.42, 300); */
+	/* l1->Draw(); */
 	
-	TLine *l2=new TLine(7964.635,0,7964.35, 300);
-	l2->Draw();
+	/* TLine *l2=new TLine(7964.635,0,7964.35, 300); */
+	/* l2->Draw(); */
 	
 
 	
