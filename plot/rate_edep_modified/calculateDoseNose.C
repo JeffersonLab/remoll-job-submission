@@ -1,8 +1,11 @@
 Int_t calculateDoseNose(TString input, TString type, Int_t scale, bool
-    fixed_range=true, Int_t detector=0, bool first_three=false){
+    fixed_range=true, Int_t detector=0, bool plot_power=false, bool first_three=false){
 
 TFile *f =new TFile(Form("%s",input.Data()));
 Float_t weight = 65*344*24*60*60/(1e-9*1.3*1e3*1e6);
+if (plot_power==true) {
+  weight = 1.0;
+}
 
 TCanvas *c=new TCanvas("c","c", 1200, 900);
 /* TCanvas *c=new TCanvas("c","c", 800, 600); */
@@ -85,7 +88,11 @@ for(Int_t i=i_min;i<=i_max;i++){
     c->cd(i);
   }
   gPad->SetMargin(0.15,0.15, 0.15, 0.15);
-  h_clone[i][0]->SetTitle(Form("Septant %i Dose (MGy)", i));
+  if (plot_power == true) {
+    h_clone[i][0]->SetTitle(Form("Septant %i Normalized Power (W/uA)", i));
+  } else {
+    h_clone[i][0]->SetTitle(Form("Septant %i Dose (MGy)", i));
+  }
   h_clone[i][0]->SetTitleSize(0.06);
   /* if ( fixed_range == kTrue ) { */
   /*   h_clone[i][0]->SetContour(nlevels, levels); */
@@ -132,6 +139,11 @@ if (first_three==true) {
   str_three = "_first3";
 }
 
+TString str_power = "";
+if (plot_power==true) {
+  str_power = "_power";
+}
+
 TString str_detector = "";
 if (detector != 0) {
   str_detector = Form("_coil%i", detector);
@@ -139,7 +151,7 @@ if (detector != 0) {
 
 TString input_trunc(input(0, input.First(".")));
 
-c->Print(Form("%s-%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_range.Data(), str_three.Data()));
+c->Print(Form("%s-%s%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_power.Data(), str_range.Data(), str_three.Data()));
 
 map<Int_t, vector<Double_t>> subcoil_dose;
 
@@ -159,17 +171,19 @@ h_clone[1][0]->Scale(1.0/7.0);
 /* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(187) << endl; */
 /* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(180) << endl; */
 
-Double_t integral_value, integral_error;
-integral_value = h_clone[1][0]->IntegralAndError(0, 450, 0, 210, integral_error);
-cout << "I : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(0, 450, 0, 50, integral_error);
-cout << "1 : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(0, 450, 50, 100, integral_error);
-cout << "2 : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(0, 450, 100, 150, integral_error);
-cout << "3 : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(0, 450, 150, 210, integral_error);
-cout << "4 : " << integral_value << " : " << integral_error << endl;
+if (detector != 0) {
+  Double_t integral_value, integral_error;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 0, 210, integral_error);
+  cout << "I : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 0, 50, integral_error);
+  cout << "1 : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 50, 100, integral_error);
+  cout << "2 : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 100, 150, integral_error);
+  cout << "3 : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 150, 210, integral_error);
+  cout << "4 : " << integral_value << " : " << integral_error << endl;
+}
 
 /* TCanvas *c1=new TCanvas(); */
 /* h_clone[detector][0]->Draw("colz"); */
@@ -190,13 +204,15 @@ return 0;
 
 /* Int_t batchDose(TString input, Int_t scale, bool fixed_range=true, */
 /*     Int_t detector=0, bool first_three=false){ */
-Int_t batchDoseNose(TString input, Int_t scale, Int_t detector=0) {
+Int_t batchDoseNose(TString input, Int_t scale, Int_t detector=0, bool
+    plot_power=false) {
   
   int fixed_range = false;
-  calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, false);
+  calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector,
+      plot_power, false);
 
   fixed_range = true;
-  /* calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, false); */
+  /* calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, plot_power, false); */
 
   return 0;
 }
