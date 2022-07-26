@@ -68,7 +68,7 @@ for(Int_t i=i_min;i<=i_max;i++){
     c->cd(i);
   }
   gPad->SetMargin(0.15,0.15, 0.15, 0.15);
-  h_clone[i][0]->SetTitle(Form("Septant %i Power Into Copper [beam current normalized] (W/uA)", i));
+  h_clone[i][0]->SetTitle(Form("Septant %i Power [beam current normalized] (W/uA)", i));
   h_clone[i][0]->SetTitleSize(0.06);
   /* if ( fixed_range == kTrue ) { */
   /*   h_clone[i][0]->SetContour(nlevels, levels); */
