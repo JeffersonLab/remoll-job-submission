@@ -202,7 +202,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                   }
 
                 }
-                if(XY.X()<42){
+                if(XY.X()<42 && hit.yl<0.0 && hit.yl> -856.309){
                   h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                   h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                 }   
@@ -237,7 +237,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                   }
 
                 }
-                if(XY.X()<44.5){
+                if(XY.X()<44.5 && hit.yl<0.0 && hit.yl > -836.42){
                   h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                   h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                 }
@@ -273,7 +273,7 @@ int analyse(TString source, TString out, TString gen, Double_t open_min, Double_
                   }
 
                 }
-                if(XY.X()<47){
+                if(XY.X()<47 && hit.yl<0.0 && hit.yl > -747.81){
                   h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
                   h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
                 }
