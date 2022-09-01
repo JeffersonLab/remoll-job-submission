@@ -2,6 +2,7 @@ Int_t calculateDose(TString input, TString type, Int_t scale, bool
     fixed_range=true, Int_t detector=0, bool first_three=false){
 
 TFile *f =new TFile(Form("%s",input.Data()));
+/* Float_t weight = 65*344*24*60*60/(1e-9*1.3*1e3*1e6); */
 Float_t weight = 65*344*24*60*60/(40e-9*1.3*1e3*1e6);
 
 TCanvas *c=new TCanvas("c","c", 1200, 900);
@@ -101,7 +102,7 @@ for(Int_t i=i_min;i<=i_max;i++){
       h_clone[i][0]->GetYaxis()->SetRangeUser(0, 300);
     }
   } else {
-    h_clone[i][0]->GetXaxis()->SetRangeUser(5000,12000);
+    h_clone[i][0]->GetXaxis()->SetRangeUser(4900,12000);
   }
   /* cout << "Coil " << i << " Total Dose = " << h_clone[i][0]->Integral(); */
   /* cout << " MGy\n"; */

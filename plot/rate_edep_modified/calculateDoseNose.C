@@ -31,7 +31,9 @@ for(Int_t i=1;i<=7; i++){
 
 	gStyle->SetOptStat(0);
 	h_clone[i][0]->Scale(1.0/scale*weight);
-        /* h_clone[i][0]->RebinX(2); */
+        /* h_clone[i][0]->RebinX(5); */
+	/* h_clone[i][0]->Scale(0.2); */
+
 	
 	
 	/* TLine *l=new TLine(5937.67,0,5937.67, 300); */
@@ -45,6 +47,11 @@ for(Int_t i=1;i<=7; i++){
 	
 
 	
+}
+
+TH2D* h_sum = (TH2D*) h_clone[1][0]->Clone("h_sum");
+for (Int_t i=2; i<=7; i++) {
+  h_sum->Add(h_clone[i][0]);
 }
 
 Int_t nlevels=4;
@@ -151,6 +158,7 @@ if (detector != 0) {
 
 TString input_trunc(input(0, input.First(".")));
 
+/* c->Print(Form("%s-%s%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_power.Data(), str_range.Data(), str_three.Data())); */
 c->Print(Form("%s-%s%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_power.Data(), str_range.Data(), str_three.Data()));
 
 map<Int_t, vector<Double_t>> subcoil_dose;
@@ -208,11 +216,10 @@ Int_t batchDoseNose(TString input, Int_t scale, Int_t detector=0, bool
     plot_power=false) {
   
   int fixed_range = false;
-  calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector,
-      plot_power, false);
+  calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, plot_power, false);
 
   fixed_range = true;
-  /* calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, plot_power, false); */
+  calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, plot_power, false);
 
   return 0;
 }
