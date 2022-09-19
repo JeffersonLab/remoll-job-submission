@@ -23,7 +23,7 @@ parser.add_argument("--time", dest="time", action= "store", required= False, def
 parser.add_argument("--G4", dest="geant", action= "store", required=False, default="4",  help="choose geant4 version to use. 4 or 6.")
 parser.add_argument("--umap", dest="umap", action = "store", required=False, default="upstreamJLAB_v2", help="provide the map name for upstream magnet. Ex: upstreamJLAB_v2.txt")
 parser.add_argument("--dmap", dest="dmap", action = "store", required=False, default="segmentedJLAB_v2", help="provide the map name for downstream magnet. Ex: segmentedJLAB_v2.txt")
-parser.add_argument("--targ", dest="targ", action = "store", required=False, default="USAlTarg", help="provide the target name.")
+parser.add_argument("--targ", dest="targ", action = "store", required=False, default="LH2", help="provide the target name. Use USAl and DSAl for  aluminum generators.")
 parser.add_argument("--pion", dest="pion", action = "store", required=False, default="pi-", help="provide the pion name.")
 parser.add_argument("--interpol", dest="interpol", action="store", required=True, help="provide interpolation.")
 
@@ -80,8 +80,10 @@ if args.gen=="beam":
 else:
     jsubf.write("echo /remoll/oldras false >>"+macro+"\n")
 
+jsubf.write("echo /remoll/geometry/absolute_position targetLadder \(0,0,0\) >>"+macro+"\n")
+jsubf.write("echo /remoll/target/mother LH2 >>"+macro+"\n")
 if (args.gen=="inelasticAl" or args.gen=="elasticAl" or args.gen=="quasielasticAl"):
-    jsubf.write("echo /remoll/targname "+args.targ+"  >>"+macro+"\n")
+    jsubf.write("echo /remoll/target/volume "+args.targ+"  >>"+macro+"\n")
 
 if (args.gen=="pion"):
     jsubf.write("echo /remoll/evgen/pion/settype "+args.pion+" >>"+macro+"\n")
