@@ -99,6 +99,15 @@ elif ("usElectronicsAna" in args.home):
 elif ("heShldAna" in args.home):
   jsubf.write("./reroot -q -b heShldAna.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",1000,1,1)\"\n")
   jsubf.write("mv ${FILE[${SLURM_ARRAY_TASK_ID}-1]}_heShldAnaV0.root "+out+"\n")
+elif ("sampipe_backsplash" in args.home):
+  jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", \\\"ring1\\\", \\\"RECREATE\\\")\"\n")
+  jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", \\\"ring2\\\", \\\"UPDATE\\\")\"\n")
+  jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", \\\"ring3\\\", \\\"UPDATE\\\")\"\n")
+  jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", \\\"ring4\\\", \\\"UPDATE\\\")\"\n")
+  jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", \\\"ring5\\\", \\\"UPDATE\\\")\"\n")
+  jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", \\\"ring6\\\", \\\"UPDATE\\\")\"\n")
+  jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", \\\"PMT\\\", \\\"UPDATE\\\")\"\n")
+  jsubf.write("mv analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root "+out+"\n")	
 else:
   jsubf.write("./reroot -q -b analyse.C\"(\\\"${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\",\\\"analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root\\\", \\\""+args.gen+"\\\", 900, 1060, 900, 1060, 900, 1060)\"\n")
   jsubf.write("mv analysed_${FILE[${SLURM_ARRAY_TASK_ID}-1]}.root "+out+"\n")
