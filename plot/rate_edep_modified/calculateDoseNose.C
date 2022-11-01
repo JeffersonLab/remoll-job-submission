@@ -1,9 +1,11 @@
-Int_t calculateDose(TString input, TString type, Int_t scale, bool
-    fixed_range=true, Int_t detector=0, bool first_three=false){
+Int_t calculateDoseNose(TString input, TString type, Int_t scale, bool
+    fixed_range=true, Int_t detector=0, bool plot_power=false, bool first_three=false){
 
 TFile *f =new TFile(Form("%s",input.Data()));
-/* Float_t weight = 65*344*24*60*60/(1e-9*1.3*1e3*1e6); */
-Float_t weight = 65*344*24*60*60/(40e-9*1.3*1e3*1e6);
+Float_t weight = 65*344*24*60*60/(1e-9*1.3*1e3*1e6);
+if (plot_power==true) {
+  weight = 1.0;
+}
 
 TCanvas *c=new TCanvas("c","c", 1200, 900);
 /* TCanvas *c=new TCanvas("c","c", 800, 600); */
@@ -29,7 +31,9 @@ for(Int_t i=1;i<=7; i++){
 
 	gStyle->SetOptStat(0);
 	h_clone[i][0]->Scale(1.0/scale*weight);
-        h_clone[i][0]->RebinX(2);
+        /* h_clone[i][0]->RebinX(5); */
+	/* h_clone[i][0]->Scale(0.2); */
+
 	
 	
 	/* TLine *l=new TLine(5937.67,0,5937.67, 300); */
@@ -43,6 +47,11 @@ for(Int_t i=1;i<=7; i++){
 	
 
 	
+}
+
+TH2D* h_sum = (TH2D*) h_clone[1][0]->Clone("h_sum");
+for (Int_t i=2; i<=7; i++) {
+  h_sum->Add(h_clone[i][0]);
 }
 
 Int_t nlevels=4;
@@ -59,6 +68,19 @@ cout << type.Data() << endl;
 
 Int_t i_min, i_max;
 
+TBox* b_coil1 = new TBox(-105.7, -11.35, 105.7, 11.35);
+b_coil1->SetFillStyle(0);
+b_coil1->SetLineWidth(2);
+TBox* b_coil2 = new TBox(-138.128, -12.95 + 50.0, 138.128, 12.95 + 50.0);
+b_coil2->SetFillStyle(0);
+b_coil2->SetLineWidth(2);
+TBox* b_coil3 = new TBox(-173.212, -13.45 + 100.0, 173.212, 13.45 + 100.0);
+b_coil3->SetFillStyle(0);
+b_coil3->SetLineWidth(2);
+TBox* b_coil4 = new TBox(-207.948, -24.7 + 150.0, 207.948, 24.7 + 150.0);
+b_coil4->SetFillStyle(0);
+b_coil4->SetLineWidth(2);
+
 if (detector == 0) {
   c->Divide(3,3); 
   i_min = 1;
@@ -73,7 +95,11 @@ for(Int_t i=i_min;i<=i_max;i++){
     c->cd(i);
   }
   gPad->SetMargin(0.15,0.15, 0.15, 0.15);
-  h_clone[i][0]->SetTitle(Form("Septant %i Dose (MGy)", i));
+  if (plot_power == true) {
+    h_clone[i][0]->SetTitle(Form("Septant %i Normalized Power (W/uA)", i));
+  } else {
+    h_clone[i][0]->SetTitle(Form("Septant %i Dose (MGy)", i));
+  }
   h_clone[i][0]->SetTitleSize(0.06);
   /* if ( fixed_range == kTrue ) { */
   /*   h_clone[i][0]->SetContour(nlevels, levels); */
@@ -88,22 +114,22 @@ for(Int_t i=i_min;i<=i_max;i++){
   h_clone[i][0]->GetXaxis()->SetLabelSize(0.06);
   h_clone[i][0]->GetYaxis()->SetTitleSize(0.06);
   h_clone[i][0]->GetXaxis()->SetTitleSize(0.06);
-  h_clone[i][0]->GetXaxis()->SetTitle("Longitudinal Position (mm)");
-  if (type == "de_phz_bottom") {
-    h_clone[i][0]->GetYaxis()->SetTitle("Transverse Position (mm)");
-  } else {
-    h_clone[i][0]->GetYaxis()->SetTitle("Radial Position (mm)");
-  }
-  if ( first_three == true ) {
-    h_clone[i][0]->GetXaxis()->SetRangeUser(4900, 8000);
-    if (type == "de_phz_bottom") {
-      h_clone[i][0]->GetYaxis()->SetRangeUser(-15,15);
-    } else {
-      h_clone[i][0]->GetYaxis()->SetRangeUser(0, 300);
-    }
-  } else {
-    h_clone[i][0]->GetXaxis()->SetRangeUser(4900,12000);
-  }
+  h_clone[i][0]->GetXaxis()->SetTitle("Circumferential Position (mm)");
+  h_clone[i][0]->GetYaxis()->SetTitle("Transverse Position (mm)");
+  b_coil1->Draw();
+  b_coil2->Draw();
+  b_coil3->Draw();
+  b_coil4->Draw();
+  /* if ( first_three == true ) { */
+  /*   h_clone[i][0]->GetXaxis()->SetRangeUser(4900, 8000); */
+  /*   if (type == "de_phz_bottom") { */
+  /*     h_clone[i][0]->GetYaxis()->SetRangeUser(-15,15); */
+  /*   } else { */
+  /*     h_clone[i][0]->GetYaxis()->SetRangeUser(0, 300); */
+  /*   } */
+  /* } else { */
+  /*   h_clone[i][0]->GetXaxis()->SetRangeUser(5000,12000); */
+  /* } */
   /* cout << "Coil " << i << " Total Dose = " << h_clone[i][0]->Integral(); */
   /* cout << " MGy\n"; */
   coil_dose.push_back(h_clone[i][0]->Integral());
@@ -120,6 +146,11 @@ if (first_three==true) {
   str_three = "_first3";
 }
 
+TString str_power = "";
+if (plot_power==true) {
+  str_power = "_power";
+}
+
 TString str_detector = "";
 if (detector != 0) {
   str_detector = Form("_coil%i", detector);
@@ -127,7 +158,8 @@ if (detector != 0) {
 
 TString input_trunc(input(0, input.First(".")));
 
-c->Print(Form("%s-%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_range.Data(), str_three.Data()));
+/* c->Print(Form("%s-%s%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_power.Data(), str_range.Data(), str_three.Data())); */
+c->Print(Form("%s-%s%s%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Data(), str_power.Data(), str_range.Data(), str_three.Data()));
 
 map<Int_t, vector<Double_t>> subcoil_dose;
 
@@ -147,17 +179,19 @@ h_clone[1][0]->Scale(1.0/7.0);
 /* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(187) << endl; */
 /* cout << h_clone[1][0]->GetXaxis()->GetBinLowEdge(180) << endl; */
 
-Double_t integral_value, integral_error;
-integral_value = h_clone[1][0]->IntegralAndError(1, 187, 0, 450, integral_error);
-cout << "I : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(1, 29, 0, 450, integral_error);
-cout << "1 : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(30, 54, 0, 450, integral_error);
-cout << "2 : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(55, 80, 0, 450, integral_error);
-cout << "3 : " << integral_value << " : " << integral_error << endl;
-integral_value = h_clone[1][0]->IntegralAndError(81, 187, 0, 450, integral_error);
-cout << "4 : " << integral_value << " : " << integral_error << endl;
+if (detector != 0) {
+  Double_t integral_value, integral_error;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 0, 210, integral_error);
+  cout << "I : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 0, 50, integral_error);
+  cout << "1 : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 50, 100, integral_error);
+  cout << "2 : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 100, 150, integral_error);
+  cout << "3 : " << integral_value << " : " << integral_error << endl;
+  integral_value = h_clone[detector][0]->IntegralAndError(0, 450, 150, 210, integral_error);
+  cout << "4 : " << integral_value << " : " << integral_error << endl;
+}
 
 /* TCanvas *c1=new TCanvas(); */
 /* h_clone[detector][0]->Draw("colz"); */
@@ -178,25 +212,14 @@ return 0;
 
 /* Int_t batchDose(TString input, Int_t scale, bool fixed_range=true, */
 /*     Int_t detector=0, bool first_three=false){ */
-Int_t batchDose(TString input, Int_t scale, Int_t detector=0) {
+Int_t batchDoseNose(TString input, Int_t scale, Int_t detector=0, bool
+    plot_power=false) {
   
   int fixed_range = false;
-  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, true);
-  calculateDose(input, "de_rz_left", scale, fixed_range, detector, true);
-  calculateDose(input, "de_rz_right", scale, fixed_range, detector, true);
-
-  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, false);
-  calculateDose(input, "de_rz_left", scale, fixed_range, detector, false);
-  calculateDose(input, "de_rz_right", scale, fixed_range, detector, false);
+  calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, plot_power, false);
 
   fixed_range = true;
-  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, true);
-  calculateDose(input, "de_rz_left", scale, fixed_range, detector, true);
-  calculateDose(input, "de_rz_right", scale, fixed_range, detector, true);
-
-  calculateDose(input, "de_phz_bottom", scale, fixed_range, detector, false);
-  calculateDose(input, "de_rz_left", scale, fixed_range, detector, false);
-  calculateDose(input, "de_rz_right", scale, fixed_range, detector, false);
+  calculateDoseNose(input, "de_phph_nose", scale, fixed_range, detector, plot_power, false);
 
   return 0;
 }
