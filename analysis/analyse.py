@@ -32,6 +32,7 @@ if not os.path.exists(args.out_dir):
         os.system("mkdir -p "+args.out_dir)
 
 args.src_dir=os.path.realpath(args.src_dir)
+args.home=os.path.realpath(args.home)
 jsub=os.path.realpath(args.jsub_dir)
 out=os.path.realpath(args.out_dir)
 tmp=os.path.realpath(args.tmp_dir)
