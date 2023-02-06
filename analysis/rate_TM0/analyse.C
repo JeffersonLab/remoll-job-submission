@@ -100,10 +100,10 @@ int analyse(TString source, TString out, TString gen){
                                       1100, 0, 11000);
       h_r[id]  = new TH1D(id+"_r",\
                           id+"_r, Generator="+gen,\
-			                    500, 0, 1000);
+			                    750, 0, 1500);
       h_r_e[id] = new TH1D(id+"_r_e",\
                            id+"_r_e, Generator="+gen,\
-			                     500, 0, 1000);
+			                     750, 0, 1500);
     }
   }
 
