@@ -1,8 +1,6 @@
 using namespace ROOT;
 
-int analyse(TString source, TString out, TString gen,\ 
-            Double_t open_min, Double_t open_max, Double_t trans_min,\ 
-            Double_t trans_max, Double_t closed_min, Double_t closed_max){
+int analyse(TString source, TString out, TString gen){
   
   /*Add source root file to TChain and get total number of events*/
 
