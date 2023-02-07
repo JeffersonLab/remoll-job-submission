@@ -77,9 +77,153 @@ int analyse(TString source, TString out, TString gen){
   T.SetBranchAddress("rate", &fRate);
   T.SetBranchAddress("part", &fPart);
   
-  
-  
+  /*Loop over events and hits per event and fill histograms*/
+  for (size_t j=0;j< nEvents;j++){
+    T.GetEntry(j);
+    for (size_t i=0;i<fHit->size();i++){
+      if(gen=="beam"){
+        fRate=1;
+      }
+      remollGenericDetectorHit_t hit=fHit->at(i);
 
-  
-  
+      TVector2 xy(hit.x, hit.y);
+      TVector2 XY(hit.x, hit.y);
+      
+      Bool_t ene_cut;
+      std::map<TString, Bool_t> hit_pid;
+      
+      for (Int_t k=0;k<energy_bins;k++){
+        if(k==0){ ene_cut= hit.p<1; }
+        else if (k==1) { ene_cut=hit.p>=1 && hit.p<10;}
+        else if (k==2) { ene_cut=hit.p>=10 && hit.p<100;}
+        else{ ene_cut = hit.p>= 100;}
+
+        for (Int_t i=0; i<n_septant; i++){
+          part= Form("pr_%d_E%d",i+1,k);
+          XY= xy.Rotate(-i*size_septant);
+          hit_pid[part]= ene_cut ;
+          
+          if(hit.det==(3008+i)){
+            if(hit.z<5938){
+              if(XY.Y()>20.7/2.0){
+                h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=41 && XY.X()<=61){
+                  h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(XY.Y()<-20.7/2.0){
+                h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=41 && XY.X()<=61){
+                  h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(XY.X()<42 && hit.yl<0.0 && hit.yl> -856.309){
+                h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
+                h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+              }
+              if (hit.yl>0.0) {
+                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 87.935, 131.435);
+                if (circ_pos > -100000) {
+                  h_de_phph_nose[part]->Fill(circ_pos,
+                  XY.Y()+50.0, hit.edep*(fRate)*weight);
+                  h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                }
+              }
+            }else if(hit.z>=5938 && hit.z<6973){
+              if(XY.Y()>23.9/2.0){
+                h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=43.5 && XY.X()<=63.5){
+                  h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(XY.Y()<-23.9/2.0){
+                h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=43.5 && XY.X()<=63.5){
+                  h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(XY.X()<44.5 && hit.yl<0.0 && hit.yl > -836.42){
+                h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
+                h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+              }
+              if (hit.yl>0.0) {
+                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 87.935, 131.435);
+                if (circ_pos > -100000) {
+                  h_de_phph_nose[part]->Fill(circ_pos, XY.Y()+50.0, hit.edep*(fRate)*weight);
+                  h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                }
+              }
+            }else if(hit.z>=6973 && hit.z<7965){
+              if(XY.Y()>24.9/2.0){
+                h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=46 && XY.X()<=66){
+                  h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(XY.Y()<-24.9/2.0){
+                h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=46 && XY.X()<=66){
+                  h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(XY.X()<47 && hit.yl<0.0 && hit.yl > -747.81){
+                h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
+                h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+              }
+              if (hit.yl>0.0) {
+                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 110.27, 156.27);
+                if (circ_pos > -100000) {
+                  h_de_phph_nose[part]->Fill(circ_pos,
+                  XY.Y() + 100.0, hit.edep*(fRate)*weight);
+                  h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                }
+              }
+            }else{
+              if(XY.Y()>23.7){
+                h_de_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()<=450){
+                  h_de_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(XY.Y()<-23.7){
+                h_de_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()<=450){
+                  h_de_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
+              }
+              if(in_coil_4_epoxy(XY.X(), hit.z) == 1){
+                h_de_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
+                h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+              }
+              if (hit.yl>0.0) {
+                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 132.3835, 188.6295);
+                if (circ_pos > -100000) {
+                  h_de_phph_nose[part]->Fill(circ_pos,
+                  XY.Y() + 150.0, hit.edep*(fRate)*weight);
+                  h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  for(Int_t k=0; k<energy_bins;k++){
+    for (Int_t i=0; i<n_septant; i++){
+      part= Form("pr_%d_E%d", i+1,k);
+      h_de_rz_left[part]->Write("", TObject::kOverwrite);
+      h_de_rz_right[part]->Write("", TObject::kOverwrite);
+      h_de_phz_bottom[part]->Write("", TObject::kOverwrite);
+      h_de_phph_nose[part]->Write("", TObject::kOverwrite);
+      h_de_rz_left_1D[part]->Write("", TObject::kOverwrite);
+      h_de_rz_right_1D[part]->Write("", TObject::kOverwrite);
+      h_de_phz_bottom_1D[part]->Write("", TObject::kOverwrite);
+      h_de_phph_nose_1D[part]->Write("", TObject::kOverwrite);
+    }
+  }
+
+return 0;
 }
