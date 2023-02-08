@@ -1,3 +1,47 @@
+using namespace ROOT;
+
+int in_coil_4_epoxy(Double_t r, Double_t z){
+
+  const Int_t n_vertices = 4;
+  Double_t z_vertex[n_vertices] = {8096.987, 9763.020, 11115.011, 11664.245};
+  Double_t slope[n_vertices-1] = {0.013111, 0.060271, -0.056657};
+  Double_t intercept[n_vertices-1] = {-49.357, -509.777, 789.883};
+
+  const Double_t delta_r_epoxy = 0.0;
+
+  for (Int_t i = 0; i < n_vertices; i++) {
+    if (z >= z_vertex[i] && z < z_vertex[i+1]) {
+      Double_t r_outer = slope[i]*z + intercept[i];
+      Double_t r_epoxy = r_outer + delta_r_epoxy;
+      if (r <= r_epoxy) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+Double_t in_coil_nose_epoxy(Double_t r, Double_t z, Double_t r_outer, Double_t r_0) {
+
+  const Double_t r_inner = r_outer - 1.0; // Inner radius of epoxy
+  const Double_t z_0 = 0.0;
+  Double_t delta_r = r - r_0;
+  Double_t delta_z = z - z_0;
+  Double_t phi = TMath::ATan(delta_r/delta_z);
+  Double_t radius = TMath::Sqrt(delta_r*delta_r + delta_z*delta_z);
+
+  if (r_outer > radius && radius > r_inner) {
+    Double_t circ_pos;
+    circ_pos = r_outer * phi;
+    return circ_pos;
+  }
+
+  return -100000;
+}
+
+
+
 int analyse(TString source, TString out, TString gen){
   
   /*Add source root file to TChain and get total number of events*/
