@@ -12,6 +12,8 @@ with open(configfile) as csvfile:
   for row in reader:
     if row[2].strip()=="string":
       p[row[0]]=row[1].strip()
+    else if row[2].strip()=="list":
+      p[row[0]]=row[1]
     else:
       p[row[0]]=float(row[1])
 
