@@ -122,10 +122,9 @@ int analyse(TString source, TString out, TString gen){
                 h_de_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
               }
               if (hit.yl>0.0) {
-                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 87.935, 131.435);
+                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 67.292, 108.292);
                 if (circ_pos > -100000) {
-                  h_de_phph_nose[part]->Fill(circ_pos,
-                  XY.Y()+50.0, hit.edep*(fRate)*weight);
+                  h_de_phph_nose[part]->Fill(circ_pos, XY.Y(), hit.edep*(fRate)*weight);
                   h_de_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
                 }
               }
