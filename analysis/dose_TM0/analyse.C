@@ -1,3 +1,23 @@
+using namespace ROOT;
+
+Double_t in_coil_nose_epoxy(Double_t r, Double_t z, Double_t r_outer, Double_t r_0) {
+
+  const Double_t r_inner = r_outer - 1.0; // Inner radius of epoxy
+  const Double_t z_0 = 0.0;
+  Double_t delta_r = r - r_0;
+  Double_t delta_z = z - z_0;
+  Double_t phi = TMath::ATan(delta_r/delta_z);
+  Double_t radius = TMath::Sqrt(delta_r*delta_r + delta_z*delta_z);
+
+  if (r_outer > radius && radius > r_inner) {
+    Double_t circ_pos;
+    circ_pos = r_outer * phi;
+    return circ_pos;
+  }
+
+  return -100000;
+}
+
 int analyse(TString source, TString out, TString gen){
   
   /*Add source root file to TChain and get total number of events*/
