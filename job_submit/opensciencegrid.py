@@ -13,7 +13,7 @@ with open(configfile) as csvfile:
     if row[2].strip()=="string":
       p[row[0]]=row[1].strip()
     elif row[2].strip()=="list":
-      p[row[0]]=row[1]
+      p[row[0]]=row[1].split(':')
     else:
       p[row[0]]=float(row[1])
 
