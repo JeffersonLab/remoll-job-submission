@@ -13,12 +13,12 @@ Int_t calculateDose(TString input, TString type, Int_t scale, \
     for (Int_t j=0;j<4;j++){		
       TH2D* h=(TH2D*) f->Get(Form("pr_%d_E%d_%s", i, j, type.Data()));
       TH2D* h_c=(TH2D*) h->Clone(Form("pr_%d_E%d_%s_clone", i,j, type.Data()));
-       h_c->SetDirectory(0);
-       h_clone[i].push_back(h_c);
-       if(j!=0){
-	h_clone[i][0]->Add(h_clone[i][j]);
-       }
-     }	
+      h_c->SetDirectory(0);
+      h_clone[i].push_back(h_c);
+      if(j!=0){
+        h_clone[i][0]->Add(h_clone[i][j]);
+      }
+    }	
     gStyle->SetOptStat(0);
     h_clone[i][0]->Scale(1.0/scale*weight);
     h_clone[i][0]->RebinX(10);
