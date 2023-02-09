@@ -1,11 +1,11 @@
 Int_t calculateDose(TString input, TString type, Int_t scale, \
-                    bool fixed_range=true, Int_t detector=1){
+                    bool fixed_range=true, Int_t detector=0){
 
   TFile *f =new TFile(Form("%s",input.Data()));
   TCanvas *c=new TCanvas("c","c", 1200, 900);
 
   /* Float_t weight = 70*344*24*60*60/(1e-9*1.3*1e3*1e6); */
-  Float_t weight = 70*344*24*60*60/(10e-9*1.3*1e3*1e6);
+  Float_t weight = 70*344*24*60*60/(40e-9*1.3*1e3*1e6);
   std::map<Int_t,  std::vector<TH2D*>> h_clone;
 
   TString out="";
@@ -21,7 +21,7 @@ Int_t calculateDose(TString input, TString type, Int_t scale, \
     }	
     gStyle->SetOptStat(0);
     h_clone[i][0]->Scale(1.0/scale*weight);
-    h_clone[i][0]->RebinX(10);
+    h_clone[i][0]->RebinX(40);
   }
 
   Int_t nlevels=4;
@@ -72,12 +72,6 @@ Int_t calculateDose(TString input, TString type, Int_t scale, \
     }
     h_clone[i][0]->GetXaxis()->SetRangeUser(800,3200);
   }
-    
-  /* cout << "Coil " << i << " Total Dose = " << h_clone[i][0]->Integral(); */
-  /* cout << " MGy\n"; */
-  coil_dose.push_back(h_clone[i][0]->Integral());
-  /* cout << i << " : " << type.Data() << " : " << h_clone[i][0]->Integral() << "\n"; */
-} 
 
 TString str_range = "";
 if (fixed_range==true) {
@@ -96,7 +90,7 @@ c->Print(Form("%s-%s%s%s.png", type.Data(), input_trunc.Data(), str_detector.Dat
 return 0;
 }
 
-Int_t batchDose(TString input, Int_t scale, Int_t detector=1) {
+Int_t batchDose(TString input, Int_t scale, Int_t detector=0) {
   
   int fixed_range = false;
   calculateDose(input, "ue_phz_bottom", scale, fixed_range, detector);
