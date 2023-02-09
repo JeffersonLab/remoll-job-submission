@@ -73,14 +73,14 @@ int analyse(TString source, TString out, TString gen){
       off_septant.push_back((3.0-1.0*i)*size_septant);
       part= Form("pr_%d_E%d",i+1,  k);
       std::cout<< part<< std::endl;
-      h_ue_rz_left[part]=new TH2D(part+"_de_rz_left", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 60, 0, 60);
-      h_ue_rz_right[part]=new TH2D(part+"_de_rz_right", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 60, 0, 60);
-      h_ue_phz_bottom[part]=new TH2D(part+"_de_phz_bottom", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 50 , -25.0, 25.0);
-      h_ue_phph_nose[part]=new TH2D(part+"_de_phph_nose", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225, 50, -25.0, 25.0);
-      h_ue_rz_left_1D[part]=new TH1D(part+"_de_rz_left_1D", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200);
-      h_ue_rz_right_1D[part]=new TH1D(part+"_de_rz_right_1D", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200);
-      h_ue_phz_bottom_1D[part]=new TH1D(part+"_de_phz_bottom_1D", Form("%s downstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200);
-      h_ue_phph_nose_1D[part]=new TH1D(part+"_de_phph_nose_1D", Form("%s downstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225);
+      h_ue_rz_left[part]=new TH2D(part+"_ue_rz_left", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 60, 0, 60);
+      h_ue_rz_right[part]=new TH2D(part+"_ue_rz_right", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 60, 0, 60);
+      h_ue_phz_bottom[part]=new TH2D(part+"_ue_phz_bottom", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 50 , -25.0, 25.0);
+      h_ue_phph_nose[part]=new TH2D(part+"_ue_phph_nose", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225, 50, -25.0, 25.0);
+      h_ue_rz_left_1D[part]=new TH1D(part+"_ue_rz_left_1D", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200);
+      h_ue_rz_right_1D[part]=new TH1D(part+"_ue_rz_right_1D", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200);
+      h_ue_phz_bottom_1D[part]=new TH1D(part+"_ue_phz_bottom_1D", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200);
+      h_ue_phph_nose_1D[part]=new TH1D(part+"_ue_phph_nose_1D", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225);
     }
   }
   
