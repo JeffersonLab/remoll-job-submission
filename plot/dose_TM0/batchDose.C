@@ -104,9 +104,9 @@ Int_t batchDose(TString input, Int_t scale, Int_t detector=1) {
   calculateDose(input, "ue_rz_right", scale, fixed_range, detector);
 
   fixed_range = true;
-  calculateDose(input, "ue_phz_bottom", scale, fixed_range, detector, true);
-  calculateDose(input, "ue_rz_left", scale, fixed_range, detector, true);
-  calculateDose(input, "ue_rz_right", scale, fixed_range, detector, true);
+  calculateDose(input, "ue_phz_bottom", scale, fixed_range, detector);
+  calculateDose(input, "ue_rz_left", scale, fixed_range, detector);
+  calculateDose(input, "ue_rz_right", scale, fixed_range, detector);
 
   return 0;
 }
