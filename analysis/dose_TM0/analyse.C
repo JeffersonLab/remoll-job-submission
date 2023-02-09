@@ -126,13 +126,13 @@ int analyse(TString source, TString out, TString gen){
           if(hit.det==(4008+i)){
             if(XY.Y()>4.5){
               h_ue_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
-              if(XY.X()>=41 && XY.X()<=61){
+              if(XY.X()>=32 && XY.X()<=52){
                 h_ue_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
               }
             }
             if(XY.Y()<-4.5){
               h_ue_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
-              if(XY.X()>=41 && XY.X()<=61){
+              if(XY.X()>=32 && XY.X()<=52){
                 h_ue_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
               }
             }
