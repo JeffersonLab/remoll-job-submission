@@ -73,8 +73,8 @@ int analyse(TString source, TString out, TString gen){
       off_septant.push_back((3.0-1.0*i)*size_septant);
       part= Form("pr_%d_E%d",i+1,  k);
       std::cout<< part<< std::endl;
-      h_ue_rz_left[part]=new TH2D(part+"_ue_rz_left", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 60, 0, 60);
-      h_ue_rz_right[part]=new TH2D(part+"_ue_rz_right", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 60, 0, 60);
+      h_ue_rz_left[part]=new TH2D(part+"_ue_rz_left", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 300, 0, 300);
+      h_ue_rz_right[part]=new TH2D(part+"_ue_rz_right", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 300, 0, 300);
       h_ue_phz_bottom[part]=new TH2D(part+"_ue_phz_bottom", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 50 , -25.0, 25.0);
       h_ue_phph_nose[part]=new TH2D(part+"_ue_phph_nose", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 450, -225, 225, 50, -25.0, 25.0);
       h_ue_rz_left_1D[part]=new TH1D(part+"_ue_rz_left_1D", Form("%s upstream epoxy edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200);
@@ -110,7 +110,6 @@ int analyse(TString source, TString out, TString gen){
       TVector2 XY(hit.x, hit.y);
       
       Bool_t ene_cut;
-      std::map<TString, Bool_t> hit_pid;
       
       for (Int_t k=0;k<energy_bins;k++){
         if(k==0){ ene_cut= hit.p<1; }
@@ -121,30 +120,31 @@ int analyse(TString source, TString out, TString gen){
         for (Int_t i=0; i<n_septant; i++){
           part= Form("pr_%d_E%d",i+1,k);
           XY= xy.Rotate(-i*size_septant);
-          hit_pid[part]= ene_cut ;
           
-          if(hit.det==(4008+i)){
-            if(XY.Y()>4.5){
-              h_ue_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
-              if(XY.X()>=32 && XY.X()<=52){
-                h_ue_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+          if(ene_cut){
+            if(hit.det==(4008+i)){
+              if(XY.Y()>4.5){
+                h_ue_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=32 && XY.X()<=52){
+                  h_ue_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
               }
-            }
-            if(XY.Y()<-4.5){
-              h_ue_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
-              if(XY.X()>=32 && XY.X()<=52){
-                h_ue_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+              if(XY.Y()<-4.5){
+                h_ue_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+                if(XY.X()>=32 && XY.X()<=52){
+                  h_ue_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                }
               }
-            }
-            if(XY.X()<33 && hit.yl<0.0 && hit.yl> -1777.957){
-              h_ue_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
-              h_ue_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
-            }
-            if (hit.yl>0.0) {
-              Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 109.922, 141.922);
-              if (circ_pos > -100000) {
-                h_ue_phph_nose[part]->Fill(circ_pos, XY.Y(), hit.edep*(fRate)*weight);
-                h_ue_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+              if(XY.X()<33 && hit.yl<0.0 && hit.yl> -1777.957){
+                h_ue_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
+                h_ue_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+              }
+              if (hit.yl>0.0) {
+                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 109.922, 141.922);
+                if (circ_pos > -100000) {
+                  h_ue_phph_nose[part]->Fill(circ_pos, XY.Y(), hit.edep*(fRate)*weight);
+                  h_ue_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
+                }
               }
             }
           }
