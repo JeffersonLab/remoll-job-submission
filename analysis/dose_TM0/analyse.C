@@ -72,7 +72,6 @@ int analyse(TString source, TString out, TString gen){
   
   for(Int_t k=0;k<energy_bins;k++){
     for(Int_t i=0; i<n_septant; i++){
-      off_septant.push_back((3.0-1.0*i)*size_septant);
       part= Form("pr_%d_E%d",i+1,  k);
       std::cout<< part<< std::endl;
       h_ue_rz_left[part]=new TH2D(part+"_ue_rz_left", Form("%s upstream edep, Generator=%s", part.Data(), gen.Data()), 2400, 800, 3200, 300, 0, 300);
