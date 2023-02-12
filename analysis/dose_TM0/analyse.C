@@ -20,11 +20,12 @@ int analyse(TString source, TString out, TString gen){
   
   Double_t z_start = 1108.985;                                       // Location where straight part starts with respect to hall center
   Double_t z_end   = 2886.942;                                       // Location where straight part ends with respect to hall center
-  Double_t x_bottom_start = 33;                                      // Lower radial limit of lower straight section of coil excluding insulation
-  Double_t x_top_start = 250.844;                                    // Upper radial limit of upper straight section of coil excluding insulation
-  Double_t front_arc_radius =  (x_top_start-x_bottom_start)/2.0;
-  Double_t front_arc_center =  x_bottom_start + front_arc_radius;
+  Double_t r_bottom_start = 33;                                      // Lower radial limit of lower straight section of coil excluding insulation
+  Double_t r_top_start = 250.844;                                    // Upper radial limit of upper straight section of coil excluding insulation
+  Double_t front_arc_radius =  (r_top_start-r_bottom_start)/2.0;
+  Double_t front_arc_center =  r_bottom_start + front_arc_radius;
   Double_t insulation_thickness  = 1.0;                              // Thickness of insulation
+  Double_t azimuthal_width    = 9.0;                              // Azimuthal width of the coil in mm
   
   TChain T("T");
   T.Add(Form("%s", source.Data())); 
@@ -125,19 +126,19 @@ int analyse(TString source, TString out, TString gen){
           
           if(ene_cut){
             if(hit.det==(4008+i)){
-              if(global_ph>4.5){
+              if(global_ph>azimuthal_width/2.0){
                 h_ue_rz_left[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
                 if(XY.X()>=32 && XY.X()<=52){
                   h_ue_rz_left_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
-              if(global_ph<-4.5){
+              if(global_ph<-azimuthal_width/2.0){
                 h_ue_rz_right[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
                 if(XY.X()>=32 && XY.X()<=52){
                   h_ue_rz_right_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
-              if(global_r<33 && global_z >= z_start && global_z <= z_end){
+              if(global_r<r_bottom_start && global_z >= z_start && global_z <= z_end){
                 h_ue_phz_bottom[part]->Fill(global_z, global_ph, hit.edep*(fRate)*weight);
                 h_ue_phz_bottom_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
               }
