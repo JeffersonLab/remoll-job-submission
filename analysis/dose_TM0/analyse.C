@@ -1,15 +1,11 @@
 using namespace ROOT;
 
-Double_t in_coil_nose_epoxy(Double_t r, Double_t z, Double_t r_outer, Double_t r_0) {
+Double_t in_coil_nose_epoxy(Double_t r, Double_t z, Double_t r_inner, Double_t r_outer) {
 
-  const Double_t r_inner = r_outer - 1.0; // Inner radius of epoxy
-  const Double_t z_0 = 0.0;
-  Double_t delta_r = r - r_0;
-  Double_t delta_z = z - z_0;
-  Double_t phi = TMath::ATan(delta_r/delta_z);
-  Double_t radius = TMath::Sqrt(delta_r*delta_r + delta_z*delta_z);
+  Double_t phi = TMath::ATan(r/z);
+  Double_t radius = TMath::Sqrt(r*r + z*z);
 
-  if (r_outer > radius && radius > r_inner) {
+  if (r_outer >= radius && radius > r_inner) {
     Double_t circ_pos;
     circ_pos = r_outer * phi;
     return circ_pos;
@@ -21,6 +17,14 @@ Double_t in_coil_nose_epoxy(Double_t r, Double_t z, Double_t r_outer, Double_t r
 int analyse(TString source, TString out, TString gen){
   
   /*Add source root file to TChain and get total number of events*/
+  
+  Double_t z_start = 1108.985;                                       // Location where straight part starts with respect to hall center
+  Double_t z_end   = 2886.942;                                       // Location where straight part ends with respect to hall center
+  Double_t x_bottom_start = 33;                                      // Lower radial limit of lower straight section of coil excluding insulation
+  Double_t x_top_start = 250.844;                                    // Upper radial limit of upper straight section of coil excluding insulation
+  Double_t front_arc_radius =  (x_top_start-x_bottom_start)/2.0;
+  Double_t front_arc_center =  x_bottom_start + front_arc_radius;
+  Double_t insulation_thickness  = 1.0;                              // Thickness of insulation
   
   TChain T("T");
   T.Add(Form("%s", source.Data())); 
@@ -61,9 +65,6 @@ int analyse(TString source, TString out, TString gen){
 
   /*There are 7 subcoils in each torus magnet and the hits are divided into 4 energy ranges*/
   Int_t n_septant=7;
-  Double_t size_septant=2.0*TMath::Pi()/n_septant;
-  std::vector<Double_t> off_septant;
-  
   Int_t energy_bins=4;
 
   TString part;
@@ -106,9 +107,10 @@ int analyse(TString source, TString out, TString gen){
       }
       remollGenericDetectorHit_t hit=fHit->at(i);
 
-      TVector2 xy(hit.x, hit.y);
-      TVector2 XY(hit.x, hit.y);
-      
+      Double_t global_ph = hit.zl;
+      Double_t global_z  = z_start-hit.yl;
+      Double_t global_r  = front_arc_center+hit.xl;
+        
       Bool_t ene_cut;
       
       for (Int_t k=0;k<energy_bins;k++){
@@ -119,30 +121,30 @@ int analyse(TString source, TString out, TString gen){
 
         for (Int_t i=0; i<n_septant; i++){
           part= Form("pr_%d_E%d",i+1,k);
-          XY= xy.Rotate(-i*size_septant);
+          
           
           if(ene_cut){
             if(hit.det==(4008+i)){
-              if(XY.Y()>4.5){
-                h_ue_rz_left[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+              if(global_ph>4.5){
+                h_ue_rz_left[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
                 if(XY.X()>=32 && XY.X()<=52){
-                  h_ue_rz_left_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                  h_ue_rz_left_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
-              if(XY.Y()<-4.5){
-                h_ue_rz_right[part]->Fill(hit.z, XY.X(), hit.edep*(fRate)*weight);
+              if(global_ph<-4.5){
+                h_ue_rz_right[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
                 if(XY.X()>=32 && XY.X()<=52){
-                  h_ue_rz_right_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+                  h_ue_rz_right_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
-              if(XY.X()<33 && hit.yl<0.0 && hit.yl> -1777.957){
-                h_ue_phz_bottom[part]->Fill(hit.z, XY.Y(), hit.edep*(fRate)*weight);
-                h_ue_phz_bottom_1D[part]->Fill(hit.z, hit.edep*(fRate)*weight);
+              if(global_r<33 && global_z >= z_start && global_z <= z_end){
+                h_ue_phz_bottom[part]->Fill(global_z, global_ph, hit.edep*(fRate)*weight);
+                h_ue_phz_bottom_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
               }
-              if (hit.yl>0.0) {
-                Double_t circ_pos = in_coil_nose_epoxy(XY.X(), hit.yl, 109.922, 141.922);
+              if (global_z < z_start) {
+                Double_t circ_pos = in_coil_nose_epoxy(hit.xl, hit.yl, front_arc_radius, front_arc_radius+epoxy_thickness);
                 if (circ_pos > -100000) {
-                  h_ue_phph_nose[part]->Fill(circ_pos, XY.Y(), hit.edep*(fRate)*weight);
+                  h_ue_phph_nose[part]->Fill(circ_pos, global_ph, hit.edep*(fRate)*weight);
                   h_ue_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
                 }
               }
