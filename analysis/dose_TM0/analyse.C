@@ -127,13 +127,13 @@ int analyse(TString source, TString out, TString gen){
             if(hit.det==(4008+i)){
               if(global_ph>azimuthal_width/2.0){
                 h_ue_rz_left[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
-                if(global_r()>=32 && global_r()<=52){
+                if(global_r>=32 && global_r<=52){
                   h_ue_rz_left_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
               if(global_ph<-azimuthal_width/2.0){
                 h_ue_rz_right[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
-                if(global_r()>=32 && global_r()<=52){
+                if(global_r>=32 && global_r<=52){
                   h_ue_rz_right_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
