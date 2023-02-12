@@ -127,13 +127,13 @@ int analyse(TString source, TString out, TString gen){
             if(hit.det==(4008+i)){
               if(global_ph>azimuthal_width/2.0){
                 h_ue_rz_left[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
-                if(XY.X()>=32 && XY.X()<=52){
+                if(global_r()>=32 && global_r()<=52){
                   h_ue_rz_left_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
               if(global_ph<-azimuthal_width/2.0){
                 h_ue_rz_right[part]->Fill(global_z, global_r, hit.edep*(fRate)*weight);
-                if(XY.X()>=32 && XY.X()<=52){
+                if(global_r()>=32 && global_r()<=52){
                   h_ue_rz_right_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
                 }
               }
@@ -142,7 +142,7 @@ int analyse(TString source, TString out, TString gen){
                 h_ue_phz_bottom_1D[part]->Fill(global_z, hit.edep*(fRate)*weight);
               }
               if (global_z < z_start) {
-                Double_t circ_pos = in_coil_nose_epoxy(hit.xl, hit.yl, front_arc_radius, front_arc_radius+epoxy_thickness);
+                Double_t circ_pos = in_coil_nose_epoxy(hit.xl, hit.yl, front_arc_radius, front_arc_radius+insulation_thickness);
                 if (circ_pos > -100000) {
                   h_ue_phph_nose[part]->Fill(circ_pos, global_ph, hit.edep*(fRate)*weight);
                   h_ue_phph_nose_1D[part]->Fill(circ_pos, hit.edep*(fRate)*weight);
