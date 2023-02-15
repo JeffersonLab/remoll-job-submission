@@ -85,7 +85,6 @@ int analyse(TString source, TString out, TString gen){
     }
   }
   
-  
   /*Set up branches to be read from input root file*/
   
   Double_t fRate=0;
@@ -99,6 +98,7 @@ int analyse(TString source, TString out, TString gen){
   T.SetBranchAddress("part", &fPart);
   
   /*Loop over events and hits per event and fill histograms*/
+  
   for (size_t j=0;j< nEvents;j++){
     T.GetEntry(j);
     for (size_t i=0;i<fHit->size();i++){
@@ -155,7 +155,7 @@ int analyse(TString source, TString out, TString gen){
     }
   }
 
-
+  /*Write histograms to file*/
   for(Int_t k=0; k<energy_bins;k++){
     for (Int_t i=0; i<n_septant; i++){
       part= Form("pr_%d_E%d", i+1,k);
