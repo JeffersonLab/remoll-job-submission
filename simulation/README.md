@@ -12,11 +12,9 @@
  source /lustre03/project/rrg-jmammei/REMOLL/environment/cedar_env_2.0.sh
  cmake -DCMAKE_BUILD_TYPE=Release ../
  make -j 4
- cp libremoll.so ../
  cd <job_dir>
  ./macro.py -h
- ./macro.py -a halla -s . -v remoll -j /volatile/halla/moller12gev/<username>/<job
-name>/jsub -t /volatile/halla/moller12gev/<username>/<jobname>/tmp -o
-/volatile/halla/moller12gev/<username>/<job name>/scratch -g <generator>
--d 28 --bhd 28 -r 1-10 -n 1000000 --time 06:00:00
+ ./macro.py -a rrg-jmammei -s ~/projects/rrg-jmammei/<username>/<simulation_directory>
+ -v remoll -j <output_folder>/<job_name>/jsub -t <output_folder>/<jobname>/tmp -o
+<output_folder>/<jobname>/scratch -g <generator> -d 28 38  39 40 41 42 43 44 45 --bhd 28 38 39 40 41 42 43 44 45 -r 1-100 -n 75000 --time 10:00:00
 '''
