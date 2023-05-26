@@ -1,17 +1,8 @@
 # Setting up the environment
 
-To set up ROOT/6.20.04 and Geant4/10.6.p02:
+To set up ROOT and GEANT4 environment:
 
 	source /site/12gev_phys/softenv.csh 2.5
-
-The above environment is the default environment for running simulations. 
-
-The ROOT in the above environment doesn't support combining of files over a certain size using hadd. Use the following version for that purpose:
-
-	source /apps/root/6.18.04/setroot_CUE
-
-
-
 
 # Running interactive jobs on ifarm
 
