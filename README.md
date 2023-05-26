@@ -2,8 +2,7 @@
 
 To set up ROOT/6.20.04 and Geant4/10.6.p02:
 
-	source /site/12gev_phys/softenv.csh 2.4
-	source /site/12gev_phys/2.4/Linux_CentOS7.7.1908-gcc9.2.0/geant4/4.10.06.p02MT/bin/geant4.csh
+	source /site/12gev_phys/softenv.csh 2.5
 
 The above environment is the default environment for running simulations. 
 
